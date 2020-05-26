@@ -16,6 +16,6 @@ devcall	ramread (
 	int32	bpos;			/* Byte position of blk		*/
 
 	bpos = RM_BLKSIZ * blk;
-	memcpy(buff, &Ram.disk[bpos], RM_BLKSIZ);
+	memcpy(buff, &Ram[devptr->dvminor].disk[bpos], RM_BLKSIZ);
 	return OK;
 }

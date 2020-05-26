@@ -51,8 +51,11 @@ ram:
    /* Define a null device */
    NULLDEV is null on nothing
 
-   /* Define a ram disk device */
+   /* Define a ram disk device 0 */
    RAMDISK0 is ram on mem
+
+   /* Define a ram disk device 1 */
+   RAMDISK1 is ram on mem
   
 %%
 

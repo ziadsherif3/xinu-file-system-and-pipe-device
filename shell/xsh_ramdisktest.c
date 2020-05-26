@@ -16,12 +16,12 @@ shellcmd xsh_ramdisktest(int nargs, char *args[])
 	char	buff[2048];
 	char	buff2[2048];
 
-	retval = open(RAMDISK0,dskname,"rw");
+	retval = open(RAMDISK1,dskname,"rw");
 
 	if (retval < 0) {
 		kprintf("xsh_ramdisktest: open %s returns %s, stopping\r\n",
 			dskname, retval==SYSERR?"SYSERR":"TIMEOUT");
-		close( RAMDISK0 );
+		close( RAMDISK1 );
 		return 1;
 	} else {
 		kprintf("xsh_ramdisktest: open %s returns %d\r\n",
@@ -32,13 +32,13 @@ shellcmd xsh_ramdisktest(int nargs, char *args[])
 	for (i=7; i>=0; i--) {
 		memset(buff, (char)(i&0xff), RM_BLKSIZ);
 		kprintf("\n\r*** writing block %d\n\r",i);
-		retval = write(RAMDISK0, buff, i);
+		retval = write(RAMDISK1, buff, i);
 		if (retval < 0) {
 		   kprintf("write to block %d returns %d\r\n", i, retval);
 		}
 	}
 	kprintf("reading block 1\n\r");
-	retval = read(RAMDISK0, buff, 1);
+	retval = read(RAMDISK1, buff, 1);
 	kprintf("read from block 1 has return value %d\r\n", retval);
 
 	err = 0;
@@ -55,7 +55,7 @@ shellcmd xsh_ramdisktest(int nargs, char *args[])
 	}
 
 	kprintf("reading block 6\n\r");
-	retval = read(RAMDISK0, buff, 6);
+	retval = read(RAMDISK1, buff, 6);
 	err = 0;
 	for (i=0; i<RM_BLKSIZ; i++) {
 		if (buff[i] != (char) (0xff&6)) {
@@ -76,11 +76,11 @@ shellcmd xsh_ramdisktest(int nargs, char *args[])
 	}
 
 	kprintf("rewriting block 5\n\r");
-	retval = write(RAMDISK0, buff2, 5);
+	retval = write(RAMDISK1, buff2, 5);
 	kprintf("write to block 5 has return value %d\r\n", retval);
 
 	kprintf("reading block 5\n\r");
-	retval = read(RAMDISK0, buff, 5);
+	retval = read(RAMDISK1, buff, 5);
 
 	err = 0;
 	for (i=0; i<RM_BLKSIZ; i++) {
@@ -99,7 +99,7 @@ shellcmd xsh_ramdisktest(int nargs, char *args[])
 	memset(buff, NULLCH, RM_BLKSIZ);
 
 	kprintf("reading block 6 again\n\r");
-	retval = read(RAMDISK0, buff, 6);
+	retval = read(RAMDISK1, buff, 6);
 	kprintf("read from block 6 has return value %d\r\n", retval);
 
 	err = 0;

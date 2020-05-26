@@ -12,4 +12,4 @@ struct	ramdisk	{
 	char	disk[RM_BLKSIZ * RM_BLKS];
 	};
 
-extern	struct	ramdisk	Ram;
+extern	struct	ramdisk	Ram[];
