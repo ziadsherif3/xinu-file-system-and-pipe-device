@@ -39,7 +39,15 @@ ram:
 		-r ramread	-g ioerr	-p ioerr
 		-w ramwrite	-s ioerr	-n ioerr
 		-intr ionull
+/* FileSystem */
+lfs:
+	on RAMDISK0
 
+
+/* pesudo- device */
+lfl:
+	on lfs
+	
 %%
 
 /* Actual device declarations that each give the name of a device that	*/
