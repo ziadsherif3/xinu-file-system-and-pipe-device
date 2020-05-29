@@ -372,6 +372,36 @@ extern	void	xdone(void);
 /* in file yield.c */
 extern	syscall	yield(void);
 
+/* in file lmfinit.c */
+extern	devcall	lmfinit(struct dentry *);
+
+/* in file lmfctrl.c */
+extern	devcall	lmfctrl(struct dentry *, int32, int32, int32);
+
+/* in file lmfopen.c */
+extern	did32	lmfopen(struct dentry *, char *, char *);
+
+/* in file lfinit.c */
+extern	devcall	lfinit(struct dentry *);
+
+/* in file lfclose.c */
+extern	devcall	lfclose(struct dentry *);
+
+/* in file lfgetc.c */
+extern	devcall	lfgetc(struct dentry *);
+
+/* in file lfputc.c */
+extern	devcall	lfputc(struct dentry *, char);
+
+/* in file lfread.c */
+extern	devcall	lfread(struct dentry *, char *, int32);
+
+/* in file lfseek.c */
+extern	devcall	lfseek(struct dentry *, int32);
+
+/* in file lfwrite.c */
+extern	devcall	lfwrite(struct dentry *, char *, int32);
+
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
 #define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \

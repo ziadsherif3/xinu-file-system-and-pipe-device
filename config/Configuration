@@ -39,15 +39,22 @@ ram:
 		-r ramread	-g ioerr	-p ioerr
 		-w ramwrite	-s ioerr	-n ioerr
 		-intr ionull
-/* FileSystem */
+
+/* type of filesystem */
 lfs:
-	on RAMDISK0
+	on ram
+		-i lmfinit	-o lmfopen	-c ioerr
+		-r ioerr	-g ioerr	-p ioerr
+		-w ioerr	-s ioerr	-n lmfctrl
+		-intr ionull
 
-
-/* pesudo- device */
+/* type of file */
 lfl:
 	on lfs
-	
+		-i lfinit	-o ioerr	-c lfclose
+		-r lfread	-g lfgetc	-p lfputc
+		-w lfwrite	-s lfseek	-n ioerr
+		-intr ionull
 %%
 
 /* Actual device declarations that each give the name of a device that	*/
@@ -64,6 +71,57 @@ lfl:
 
    /* Define a ram disk device 1 */
    RAMDISK1 is ram on mem
+
+   /* Define FSYSTEM as an lfs device */
+   FSYSTEM is lfs on ram
+
+   /* Define pseudo-device file0 as an lfl device */
+   file0 is lfl on lfs
+
+   /* Define pseudo-device file1 as an lfl device */
+   file1 is lfl on lfs
+
+   /* Define pseudo-device file2 as an lfl device */
+   file2 is lfl on lfs
+
+   /* Define pseudo-device file3 as an lfl device */
+   file3 is lfl on lfs
+
+   /* Define pseudo-device file4 as an lfl device */
+   file4 is lfl on lfs
+
+   /* Define pseudo-device file5 as an lfl device */
+   file5 is lfl on lfs
+
+   /* Define pseudo-device file6 as an lfl device */
+   file6 is lfl on lfs
+
+   /* Define pseudo-device file7 as an lfl device */
+   file7 is lfl on lfs
+
+   /* Define pseudo-device file8 as an lfl device */
+   file8 is lfl on lfs
+
+   /* Define pseudo-device file9 as an lfl device */
+   file9 is lfl on lfs
+
+   /* Define pseudo-device file10 as an lfl device */
+   file10 is lfl on lfs
+
+   /* Define pseudo-device file11 as an lfl device */
+   file11 is lfl on lfs
+
+   /* Define pseudo-device file12 as an lfl device */
+   file12 is lfl on lfs
+
+   /* Define pseudo-device file13 as an lfl device */
+   file13 is lfl on lfs
+
+   /* Define pseudo-device file14 as an lfl device */
+   file14 is lfl on lfs
+
+   /* Define pseudo-device file15 as an lfl device */
+   file15 is lfl on lfs
   
 %%
 
