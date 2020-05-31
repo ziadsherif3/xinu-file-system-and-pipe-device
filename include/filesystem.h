@@ -13,6 +13,10 @@
 #define NAME_LEN 12             /* Length of file/directory name */
 #define LF_DNULL (dbid32) -1    /* Data block null pointer */
 
+#define FCREATE     0           /* File create */
+#define FDELETE     1           /* File delete */
+#define FMKDIR      2           /* directory create */
+#define FRMDIR      3           /* directory delete */
 
 /* Structure for the tuple used in directory i-node */
 
@@ -52,8 +56,10 @@ struct lmf {
     struct inode rt1;   /* Root for RAMDISK1 */
     bool8 rt0present;   /* True when root0 is in memory */
     bool8 rt0dirty;     /* Has root0 changed? */
+    int32 rt0pos;       /* Current position for root0 */
     bool8 rt1present;   /* True when root1 is in memory */
     bool8 rt1dirty;     /* Has root1 changed? */
+    int32 rt1pos;       /* Current position for root1 */
 };
 
 /* Structure for control block of local file pseudo-device */
