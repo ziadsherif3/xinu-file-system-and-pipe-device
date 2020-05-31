@@ -379,7 +379,7 @@ extern	devcall	lmfinit(struct dentry *);
 extern	devcall	lmfctrl(struct dentry *, int32, int32, int32);
 
 /* in file lmfopen.c */
-extern	did32	lmfopen(struct dentry *, char *, char *);
+extern	devcall	lmfopen(struct dentry *, char *, char *);
 
 /* in file lfinit.c */
 extern	devcall	lfinit(struct dentry *);
