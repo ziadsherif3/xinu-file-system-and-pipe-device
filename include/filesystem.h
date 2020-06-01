@@ -6,6 +6,10 @@
 #define	RM_BLKSIZ	512		/* block size			*/
 #endif
 
+#ifndef Nlfl
+#define	Nlfl	16		/* 	Number of Pseudo devices*/
+#endif
+
 #define RAMDISK0        0       /* RAMDISK0 */
 #define RAMDISK1        1       /* RAMDISK1 */
 
@@ -90,7 +94,7 @@ struct lfdbfree {
 };
 
 /*Pseudo devices control blocks, indexed by the minor device number (could be wrong)*/
-extern struct lfcblk lftab[16];
+struct lfcblk lftab[];
 /* Helper functions declerations */
 
 dbid32 dballoc (struct lfdbfree *);

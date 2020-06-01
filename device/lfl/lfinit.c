@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 #include <filesystem.h>
-
+struct lfcblk lftab[Nlfl];
 /*------------------------------------------------------------------------
  *  lfinit  -  Initialize control blocks for local file pseudo-devices
  *------------------------------------------------------------------------
