@@ -89,6 +89,8 @@ struct lfdbfree {
     char padding[RM_BLKSIZ - sizeof(dbid32)];   /* Padding to take the whole disk block */
 };
 
+/*Pseudo devices control blocks, indexed by the minor device number (could be wrong)*/
+extern struct lfcblk lftab[16];
 /* Helper functions declerations */
 
 dbid32 dballoc (struct lfdbfree *);
