@@ -6,6 +6,9 @@
 #define	RM_BLKSIZ	512		/* block size			*/
 #endif
 
+#define RAMDISK0        0       /* RAMDISK0 */
+#define RAMDISK1        1       /* RAMDISK1 */
+
 #define DIR     0               /* Type directory of i-node */
 #define FILE    1               /* Type file of i-node */
 #define FREE    0               /* Pseudo-device control block is free */
@@ -67,13 +70,31 @@ struct lmf {
 struct lfcblk {
     byte lfstate;               /* Is entry free or used */
     did32 lfdev;                /* Device ID of this device */
+    int32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
     sid32 lfmutex;              /* Mutex for this file */
-    struct inode *lfinode;      /* Ptr to file’s i-node */
+    struct inode lfinode;       /* In-memory i-node of file */
     int32 lfmode;               /* Mode (read/write) */
-    uint32 lfpos;               /* Byte position of next byte to read or write */
+    uint32 lfoffset;            /* Byte position of next byte to read or write */
     char lfname[NAME_LEN];      /* Name of the file */
     dbid32 lfdnum;              /* Number of current data block in lfdblock or LF_DNULL */
     char lfdblock[RM_BLKSIZ];   /* In-mem copy of current data block */
     char *lfbyte;               /* Ptr to byte in lfdblock or address one beyond lfdblock if current file pos lies outside lfdblock */
     bool8 lfdbdirty;            /* Has lfdblock changed? */
 };
+
+/* Structure to keep track of free disk blocks linked list */
+
+struct lfdbfree {
+    dbid32 lf_nextdb;                           /* Next data block on the list */
+    char padding[RM_BLKSIZ - sizeof(dbid32)];   /* Padding to take the whole disk block */
+};
+
+/* Helper functions declerations */
+
+dbid32 dballoc (struct lfdbfree *);
+void dbclear(char *);
+status dbfree(did32, dbid32);
+status fstat(char *, struct stat *);
+status lfflush (struct lfcblk *);
+status lfsetup (struct lfcblk *);
+status lftruncate (struct lfcblk *);
