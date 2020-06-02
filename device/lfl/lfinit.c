@@ -17,6 +17,8 @@ devcall	lfinit (
 	lfptr->lfstate = FREE; /* Device is currently unused */ 
 	lfptr->lfdev = devptr->dvnum; /* Set device ID */ 
 	lfptr->lfmutex = semcreate(1); /* Create the mutex semaphore */
+	lfptr->lfdbdirty = FALSE;
+	lfptr->lfoffset = 0;
 
     return OK;
 }
