@@ -3,11 +3,11 @@
 /* Constants used by the the local file system*/
 
 #ifndef RM_BLKSIZ
-#define	RM_BLKSIZ	512		/* block size			*/
+#define	RM_BLKSIZ	512		/* block size */
 #endif
 
 #ifndef Nlfl
-#define	Nlfl	16		/* 	Number of Pseudo devices*/
+#define	Nlfl        16		/* Number of Pseudo devices */
 #endif
 
 #define RAMDISK0        0       /* RAMDISK0 */
@@ -57,16 +57,18 @@ struct inode {
 /* Structure used by the the local file system (initialized in lmfinit) */
 
 struct lmf {
+    did32 ram0dskdev;   /* Device ID of RAMDISK0 */
+    did32 ram1dskdev;   /* Device ID of RAMDISK1 */
     sid32 lmf_mutex0;   /* Mutex for the root of RAMDISK0 */
     sid32 lmf_mutex1;   /* Mutex for the root of RAMDISK1 */
     struct inode rt0;   /* Root for RAMDISK0 */
     struct inode rt1;   /* Root for RAMDISK1 */
     bool8 rt0present;   /* True when root0 is in memory */
     bool8 rt0dirty;     /* Has root0 changed? */
-    int32 rt0pos;       /* Current position for root0 */
+    int32 rt0freepos;   /* Current position (start of free list) for root0 */
     bool8 rt1present;   /* True when root1 is in memory */
     bool8 rt1dirty;     /* Has root1 changed? */
-    int32 rt1pos;       /* Current position for root1 */
+    int32 rt1freepos;   /* Current position (start of free list) for root1 */
 };
 
 /* Structure for control block of local file pseudo-device */
@@ -93,8 +95,10 @@ struct lfdbfree {
     char padding[RM_BLKSIZ - sizeof(dbid32)];   /* Padding to take the whole disk block */
 };
 
-/*Pseudo devices control blocks, indexed by the minor device number (could be wrong)*/
-struct lfcblk lftab[];
+
+extern struct lfcblk lftab[];
+extern struct lmf fsystem;
+
 /* Helper functions declerations */
 
 dbid32 dballoc (struct lfdbfree *);
