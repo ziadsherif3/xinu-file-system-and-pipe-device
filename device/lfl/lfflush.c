@@ -12,5 +12,9 @@ status lfflush (
     struct lfcblk *lfptr    /* Ptr to file pseudo-device */
 )
 {
+    if (lfptr->lfstate == FREE) {
+        return SYSERR;
+    }
+
     return OK;
 }

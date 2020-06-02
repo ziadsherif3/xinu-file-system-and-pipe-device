@@ -19,6 +19,6 @@ devcall	lfinit (
 	lfptr->lfmutex = semcreate(1); /* Create the mutex semaphore */
 	lfptr->lfdbdirty = FALSE;
 	lfptr->lfoffset = 0;
-
+	lfptr->lfdnum = LF_DNULL;
     return OK;
 }
