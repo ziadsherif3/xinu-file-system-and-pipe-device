@@ -12,5 +12,13 @@ status lfflush (
     struct lfcblk *lfptr    /* Ptr to file pseudo-device */
 )
 {
+    int32 inodeNumber; /* inode Block number */
+    if (lfptr->lfstate == FREE) {
+        return SYSERR;
+    }
+    inodeNumber = lfptr->lfinode.filestat.ino;
+    kprintf("%d\n", inodeNumber);
+    
+
     return OK;
 }

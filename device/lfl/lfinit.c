@@ -14,6 +14,11 @@ devcall	lfinit (
 	struct lfcblk *lfptr; int32 i;
 	lfptr = &lftab[devptr->dvminor];
 	/* Initialize control block entry */
-
+	lfptr->lfstate = FREE; /* Device is currently unused */ 
+	lfptr->lfdev = devptr->dvnum; /* Set device ID */ 
+	lfptr->lfmutex = semcreate(1); /* Create the mutex semaphore */
+	lfptr->lfdbdirty = FALSE;
+	lfptr->lfoffset = 0;
+	lfptr->lfdnum = LF_DNULL;
     return OK;
 }
