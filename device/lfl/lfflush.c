@@ -11,23 +11,25 @@ status lfflush (
 )
 {
     int32 iNodeNumber; /* inode Block number */
-    int32 ram;
+    int32 ram;          /* RamDisk being Uaed */
+    int32 dataBlockNumber; /* Current data block number */
     if (lfptr->lfstate == FREE) {
         return SYSERR;
     }
 
     iNodeNumber = lfptr->lfinode->filestat.ino;
-    kprintf("inode block number %d\n", iNodeNumber);
+    kprintf("lfflush: Inode block number%d\n", iNodeNumber);
 
     ram = lfptr->lfram;
-    kprintf("Ram Number = %d\n", ram);
+    kprintf("lfflush: Ram Number = %d\n", ram);
 
-    if (!lfptr->lfdbdirty) {
-        return OK;
-    }
-    else
+    dataBlockNumber = lfptr->lfdnum;
+    kprintf("lfflush: Data Block number = %d\n");
+
+    if (lfptr->lfdbdirty)
     {
         write(ram,lfptr->lfinode, iNodeNumber );
+        write(ram, lfptr->lfdblock, dataBlockNumber);
         return OK; 
     }
 }
