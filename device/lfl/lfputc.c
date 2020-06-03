@@ -1,7 +1,6 @@
 /* lfputc.c  -  lfputc */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lfputc  -  Write a single byte to an open local file

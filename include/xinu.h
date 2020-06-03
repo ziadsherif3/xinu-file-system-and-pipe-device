@@ -14,6 +14,7 @@
 #include <io.h>
 #include <uart.h>
 #include <tty.h>
+#include <filesystem.h>
 #include <device.h>
 #include <interrupt.h>
 #include <shell.h>

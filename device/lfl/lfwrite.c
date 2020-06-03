@@ -1,7 +1,6 @@
 /* lfwrite.c  -  lfwrite */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lfwrite  -  Write data to a previously opened local disk file

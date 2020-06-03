@@ -1,7 +1,6 @@
 /* lfseek.c  -  lfseek */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lfseek  -  Seek to a specified position in a file

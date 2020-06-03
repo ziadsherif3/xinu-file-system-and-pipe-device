@@ -1,8 +1,6 @@
 /* lfflush.c - lfflush */
 
 #include <xinu.h>
-#include <filesystem.h>
-
 /*------------------------------------------------------------------------
 * lfflush - Flush root, data block for an open file 
 *               (assumes file mutex is held)
@@ -23,7 +21,7 @@ status lfflush (
 
     ram = lfptr->lfram;
     kprintf("Ram Number = %d\n", ram);
-    
+
     if (!lfptr->lfdbdirty) {
         return OK;
     }

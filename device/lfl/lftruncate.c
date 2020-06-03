@@ -1,7 +1,6 @@
 /* lftruncate.c - lftruncate */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
 * lftruncate - Truncate a file by freeing its data blocks

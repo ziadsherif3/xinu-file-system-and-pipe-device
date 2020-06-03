@@ -1,7 +1,6 @@
 /* lfinit.c  -  lfinit */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 struct lfcblk lftab[Nlfl];
 
