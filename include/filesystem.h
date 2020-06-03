@@ -78,7 +78,7 @@ struct lfcblk {
     did32 lfdev;                /* Device ID of this device */
     int32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
     sid32 lfmutex;              /* Mutex for this file */
-    struct inode lfinode;       /* In-memory i-node of file */
+    struct inode  * lfinode;       /* In-memory i-node of file */
     int32 lfmode;               /* Mode (read/write) */
     uint32 lfoffset;            /* Byte position of next byte to read or write */
     char lfname[NAME_LEN];      /* Name of the file */
