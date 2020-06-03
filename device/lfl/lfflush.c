@@ -12,13 +12,24 @@ status lfflush (
     struct lfcblk *lfptr    /* Ptr to file pseudo-device */
 )
 {
-    int32 inodeNumber; /* inode Block number */
+    int32 iNodeNumber; /* inode Block number */
+    int32 ram;
     if (lfptr->lfstate == FREE) {
         return SYSERR;
     }
-    inodeNumber = lfptr->lfinode->filestat.ino;
-    kprintf("%d\n", inodeNumber);
-    
 
-    return OK;
+    iNodeNumber = lfptr->lfinode->filestat.ino;
+    kprintf("inode block number %d\n", iNodeNumber);
+
+    ram = lfptr->lfram;
+    kprintf("Ram Number = %d\n", ram);
+    
+    if (!lfptr->lfdbdirty) {
+        return OK;
+    }
+    else
+    {
+        write(ram,lfptr->lfinode, iNodeNumber );
+        return OK; 
+    }
 }
