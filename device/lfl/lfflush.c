@@ -16,7 +16,7 @@ status lfflush (
     if (lfptr->lfstate == FREE) {
         return SYSERR;
     }
-    inodeNumber = lfptr->lfinode.filestat.ino;
+    inodeNumber = lfptr->lfinode->filestat.ino;
     kprintf("%d\n", inodeNumber);
     
 
