@@ -26,10 +26,13 @@ status lfflush (
     dataBlockNumber = lfptr->lfdnum;
     kprintf("lfflush: Data Block number = %d\n");
 
-    if (lfptr->lfdbdirty)
-    {
+    if (lfptr->lfdbdirty) {
         write(ram,lfptr->lfinode, iNodeNumber );
         write(ram, lfptr->lfdblock, dataBlockNumber);
         return OK; 
     }
+    else {
+        return OK;
+    }
+    
 }
