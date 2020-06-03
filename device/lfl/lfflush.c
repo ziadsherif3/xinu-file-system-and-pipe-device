@@ -28,7 +28,9 @@ status lfflush (
 
     if (lfptr->lfdbdirty) {
         write(ram,lfptr->lfinode, iNodeNumber );
-        write(ram, lfptr->lfdblock, dataBlockNumber);
+        if (dataBlockNumber != LF_DNULL) {
+            write(ram, lfptr->lfdblock, dataBlockNumber);
+        }
         return OK; 
     }
     else {

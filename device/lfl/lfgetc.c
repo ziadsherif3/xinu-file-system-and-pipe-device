@@ -10,10 +10,11 @@ devcall	lfgetc (
 	  struct dentry	*devptr	/* Entry in device switch table	*/
 	)
 {
-	struct lflcblk *lfptr; /* Ptr to open file table entry */
+	struct lfcblk *lfptr; /* Ptr to open file table entry */
 
 	/* Obtain Exclusive access to the file */
 	lfptr = &lftab[devptr->dvminor];
-	/* return an error if the file is not open */
+	wait(lfptr->lfmutex);
+
     return OK;
 }
