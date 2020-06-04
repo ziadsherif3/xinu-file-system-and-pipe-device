@@ -1,7 +1,6 @@
 /* lmfopen.c  -  lmfopen */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lmfopen  -  Open a file through the local file system master device 

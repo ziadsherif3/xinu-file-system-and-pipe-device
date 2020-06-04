@@ -1,7 +1,6 @@
 /* dballoc.c - dballoc */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 #define DFILL   '+'     /* character used to fill a disk block */
 

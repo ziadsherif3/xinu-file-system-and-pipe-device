@@ -1,7 +1,6 @@
 /* fstat.c - fstat */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
 * fstat - returns the statistics of file in the structure stat

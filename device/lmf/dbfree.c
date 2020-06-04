@@ -1,7 +1,6 @@
 /* dbfree.c - dbfree */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
 * dbfree - Free a disk block given its block number (assumes
@@ -13,10 +12,9 @@ status dbfree(
     dbid32 dnum     /* Number of data block to free */
 )
 {
-    int32 disk = devtab[diskdev].dvminor;   /* Identify which RAMDISK */
     struct lfdbfree buf;                    /* Buffer to hold data block */
 
-    if (disk == RAMDISK0) {
+    if (diskdev == RAMDISK0) {
         buf.lf_nextdb = fsystem.r0freepos;
         fsystem.r0freepos = dnum;
     }

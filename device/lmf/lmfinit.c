@@ -1,7 +1,8 @@
 /* lmfinit.c  -  lmfinit */
 
 #include <xinu.h>
-#include <filesystem.h>
+
+struct lmf fsystem;
 
 /*------------------------------------------------------------------------
  *  lmfinit  -  Initialize the local file system master device

@@ -1,6 +1,7 @@
 /* lfflush.c - lfflush */
 
 #include <xinu.h>
+
 /*------------------------------------------------------------------------
 * lfflush - Flush root, data block for an open file 
 *               (assumes file mutex is held)
@@ -13,6 +14,7 @@ status lfflush (
     int32 iNodeNumber; /* inode Block number */
     int32 ram;          /* RamDisk being Uaed */
     int32 dataBlockNumber; /* Current data block number */
+    
     if (lfptr->lfstate == FREE) {
         return SYSERR;
     }

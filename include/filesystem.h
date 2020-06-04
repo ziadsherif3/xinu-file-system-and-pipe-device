@@ -10,9 +10,6 @@
 #define	Nlfl        16		/* Number of Pseudo devices */
 #endif
 
-#define RAMDISK0        0       /* RAMDISK0 */
-#define RAMDISK1        1       /* RAMDISK1 */
-
 #define DIR     0               /* Type directory of i-node */
 #define FILE    1               /* Type file of i-node */
 #define FREE    0               /* Pseudo-device control block is free */
@@ -76,7 +73,7 @@ struct lmf {
 struct lfcblk {
     byte lfstate;               /* Is entry free or used */
     did32 lfdev;                /* Device ID of this device */
-    int32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
+    did32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
     sid32 lfmutex;              /* Mutex for this file */
     struct inode *lfinode;      /* In-memory i-node of file */
     int32 lfmode;               /* Mode (read/write) */
@@ -101,7 +98,7 @@ extern struct lmf fsystem;
 
 /* Helper functions declerations */
 
-dbid32 dballoc (struct lfdbfree *);
+dbid32 dballoc (struct lfdbfree *, int32);
 void dbclear(char *);
 status dbfree(did32, dbid32);
 status fstat(char *, struct stat *);

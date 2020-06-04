@@ -1,7 +1,6 @@
 /* lmfctrl.c  -  lmfctrl */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lmfctrl  -  Control function for lfs device
