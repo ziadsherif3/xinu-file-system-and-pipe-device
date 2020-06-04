@@ -65,10 +65,10 @@ struct lmf {
     struct inode rt1;   /* Root for RAMDISK1 */
     bool8 rt0present;   /* True when root0 is in memory */
     bool8 rt0dirty;     /* Has root0 changed? */
-    int32 rt0freepos;   /* Current position (start of free list) for root0 */
+    dbid32 r0freepos;   /* Current position (start of free list) for RAMDISK0 */
     bool8 rt1present;   /* True when root1 is in memory */
     bool8 rt1dirty;     /* Has root1 changed? */
-    int32 rt1freepos;   /* Current position (start of free list) for root1 */
+    dbid32 r1freepos;   /* Current position (start of free list) for RAMDISK1 */
 };
 
 /* Structure for control block of local file pseudo-device */
@@ -78,7 +78,7 @@ struct lfcblk {
     did32 lfdev;                /* Device ID of this device */
     int32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
     sid32 lfmutex;              /* Mutex for this file */
-    struct inode  * lfinode;       /* In-memory i-node of file */
+    struct inode *lfinode;      /* In-memory i-node of file */
     int32 lfmode;               /* Mode (read/write) */
     uint32 lfoffset;            /* Byte position of next byte to read or write */
     char lfname[NAME_LEN];      /* Name of the file */
