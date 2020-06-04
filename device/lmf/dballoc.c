@@ -44,7 +44,7 @@ dbid32 dballoc (
     if (fram == RAMDISK0) {
         fsystem.r0freepos = dbuff->lf_nextdb;
     }
-    else if (fram == RAMDISK1) {
+    else {
         fsystem.r1freepos = dbuff->lf_nextdb;
     }
 
