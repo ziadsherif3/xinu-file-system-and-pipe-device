@@ -1,7 +1,6 @@
 /* lfread.c  -  lfread */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lfread  -  Read from a previously opened local file

@@ -1,7 +1,6 @@
 /* lfclose.c  -  lfclose */
 
 #include <xinu.h>
-#include <filesystem.h>
 
 /*------------------------------------------------------------------------
  *  lfclose  -  Close a file by flushing output and freeing device entry
