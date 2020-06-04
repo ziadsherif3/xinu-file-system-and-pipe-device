@@ -25,7 +25,7 @@ dbid32 dballoc (
         dnum = fsystem.r0freepos;
         dskdev = fsystem.ram0dskdev;
     }
-    else if (fram == RAMDISK1) {
+    else {
         dnum = fsystem.r1freepos;
         dskdev = fsystem.ram1dskdev;
     }
