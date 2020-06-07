@@ -41,7 +41,7 @@ devcall	lfgetc (
 	singleByte = 0xff & *lfptr->lfbyte++;
 	lfptr->lfoffset++;
 	signal(lfptr->lfmutex);
-	return singleByte
+	return singleByte;
 
 
 	
