@@ -212,6 +212,12 @@ devcall	lmfopen (
     lfptr->lfbyte = &lfptr->lfdblock[RM_BLKSIZ];
     lfptr->lfdbdirty = FALSE;
 
+    /* Update the i-node on disk */
+
+    pnode2->filestat.dev = lfptr->lfdev;
+    pnode2->filestat.acctime = clktime;
+    write(disk, (char *)pnode2, pnode2->filestat.ino);
+
     if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);
     }
