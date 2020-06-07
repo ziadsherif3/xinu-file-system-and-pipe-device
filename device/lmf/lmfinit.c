@@ -25,6 +25,7 @@ devcall	lmfinit (
 
 	fsystem.lmf_mutex0 = semcreate(1);
 	fsystem.lmf_mutex1 = semcreate(1);
+	fsystem.lftabmutex = semcreate(1);
 
 	/* Prepare 2 roots */
 
@@ -53,11 +54,17 @@ local	status	lmfcreate(void)
 	struct lfdbfree dblock; 		/* Data block on the free list */
 	int32 retval; 					/* Return value from func call */
 	int32 i; 						/* Loop index */
+	char name[] = "root\0";			/* Name for the root */
 
 	/* Create an initial root */
 
 	memset((char *)&rt, NULLCH, sizeof(struct inode));
 	rt.type = DIR;
+	strncpy(rt.name, name, strlen(name) + 1);
+	rt.filestat.ino = 0;
+	rt.filestat.dev = -1;
+	rt.filestat.size = 0;
+	rt.filestat.acctime = rt.filestat.ctime = rt.filestat.mtime = clktime;
 	retval = write(RAMDISK0, (char *)&rt, 0);
 	retval = write(RAMDISK1, (char *)&rt, 0);
 	if (retval == SYSERR) {
