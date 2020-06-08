@@ -33,7 +33,7 @@ devcall	lfgetc (
 
 	/* if the byte pointer is beyond the current the block call setup */
 
-	if ( lfptr->lfbyte >= lfptr->lfdblock[RM_BLKSIZ]) {
+	if ( lfptr->lfbyte >= lfptr->lfdblock[RM_BLKSIZ]) { /* possible error */
 		lfsetup(lfptr);
 	}
 	/* Extract the next byte and update the related variables */
