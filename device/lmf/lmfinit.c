@@ -31,8 +31,8 @@ devcall	lmfinit (
 
 	memset((char *)&fsystem.rt0, NULLCH, sizeof(struct inode));
 	memset((char *)&fsystem.rt1, NULLCH, sizeof(struct inode));
-	fsystem.rt0present = fsystem.rt0dirty = FALSE;
-	fsystem.rt1present = fsystem.rt1dirty = FALSE;
+	fsystem.rt0present = FALSE;
+	fsystem.rt1present = FALSE;
 	fsystem.r0freepos = fsystem.r1freepos = 1;		/* Indicate the block number of the first disk block in free list of both disks */
 
 	retval = lmfcreate();
@@ -62,9 +62,7 @@ local	status	lmfcreate(void)
 	rt.type = DIR;
 	strncpy(rt.name, name, strlen(name) + 1);
 	rt.filestat.ino = 0;
-	rt.filestat.dev = -1;
 	rt.filestat.size = 0;
-	rt.filestat.acctime = rt.filestat.ctime = rt.filestat.mtime = clktime;
 	retval = write(RAMDISK0, (char *)&rt, 0);
 	retval = write(RAMDISK1, (char *)&rt, 0);
 	if (retval == SYSERR) {

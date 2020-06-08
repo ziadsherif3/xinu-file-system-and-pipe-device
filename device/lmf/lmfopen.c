@@ -26,7 +26,7 @@ devcall	lmfopen (
     int32 retval;               /* Value returned from function */
     int32 retval1;              /* Value returned from function */
     int32 retval2;              /* Value returned from function */
-    int32 mod;                 /* Open Mode (rmode/wmode) */
+    int32 mod;                  /* Open Mode (rmode/wmode) */
     did32 disk;                 /* Device ID of disk */
 
     /* Check path name validity */

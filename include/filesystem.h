@@ -65,10 +65,8 @@ struct lmf {
     struct inode rt0;   /* Root for RAMDISK0 */
     struct inode rt1;   /* Root for RAMDISK1 */
     bool8 rt0present;   /* True when root0 is in memory */
-    bool8 rt0dirty;     /* Has root0 changed? */
     dbid32 r0freepos;   /* Current position (start of free list) for RAMDISK0 */
     bool8 rt1present;   /* True when root1 is in memory */
-    bool8 rt1dirty;     /* Has root1 changed? */
     dbid32 r1freepos;   /* Current position (start of free list) for RAMDISK1 */
 };
 
