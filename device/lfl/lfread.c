@@ -20,7 +20,7 @@ devcall	lfread (
     }
     /* Use lfgetc to read bytes */
     for ( numRead = 0; numRead < count; numRead++) {
-        nextByte = lflgetc(devptr);
+        nextByte = lfgetc(devptr);
         if (nextByte == SYSERR) { 
             return SYSERR;
         } 
