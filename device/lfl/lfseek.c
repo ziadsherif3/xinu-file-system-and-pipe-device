@@ -11,6 +11,23 @@ devcall	lfseek (
       int32 offset      /* Byte position in the file */
 	)
 {
-    struct lfcblk *lfptr; /*pointer to open file table block */
+    struct lfcblk *lfptr; /*pointer to open file table entry */
+
+    /* If file is not open, return an error */
+
+    lfptr = &lftab[devptr->dvminor];
+    wait(lfptr->lfmutex);
+    if (lfptr->lfstate != USED) {
+        signal(lfptr->lfmutex);
+        return SYSERR;
+    }
+
+    /* Verify offset is within the current file size */
+    if (offset > lfptr->lfinode->filestat.size)
+    {
+        signal(lfptr->lfmutex);
+        return SYSERR;
+    }
+
     return OK;
 }
