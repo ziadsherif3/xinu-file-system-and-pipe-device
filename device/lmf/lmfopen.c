@@ -44,7 +44,22 @@ devcall	lmfopen (
         return SYSERR;
     }
 
-    while((*chp++) != NULLCH);
+    while (*chp != NULLCH) {
+        if (*chp == '/'){ /* 2 or more forward slashes were found following each other */
+            return SYSERR;
+        }
+        for (i = 0; i < NAME_LEN; i++) {
+            if ((*chp == '/') || (*chp == NULLCH)) {
+                break;
+            }
+            chp++;
+        }
+        if (i >= NAME_LEN) { /* Name is too long */
+            return SYSERR;
+        }
+
+        chp++;
+    }
 
     while ((*--chp) != '/');
     chp++;
@@ -125,9 +140,6 @@ devcall	lmfopen (
     memcpy((char *)pnode1, (char *)root, sizeof(struct inode));
     chp = name + 5;
     while (*chp != NULLCH) {
-        if (*chp == '/') { /* 2 or more forward slashes were found following each other */
-            break;
-        }
         to = nam;
         while ((*chp != NULLCH) && (*chp != '/')) {
             *to++ = *chp++;
@@ -216,7 +228,17 @@ devcall	lmfopen (
 
     pnode2->filestat.dev = lfptr->lfdev;
     pnode2->filestat.acctime = clktime;
-    write(disk, (char *)pnode2, pnode2->filestat.ino);
+    retval = write(disk, (char *)pnode2, pnode2->filestat.ino);
+
+    if (retval == SYSERR) {
+		if (retval1 == 0) {
+            signal(fsystem.lmf_mutex0);
+        }
+        else {
+            signal(fsystem.lmf_mutex1);
+        }
+        return SYSERR;
+	}
 
     if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);

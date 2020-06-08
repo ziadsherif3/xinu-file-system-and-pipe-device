@@ -40,6 +40,23 @@ status fstat(
         return SYSERR;
     }
 
+    while (*chp != NULLCH) {
+        if (*chp == '/'){ /* 2 or more forward slashes were found following each other */
+            return SYSERR;
+        }
+        for (i = 0; i < NAME_LEN; i++) {
+            if ((*chp == '/') || (*chp == NULLCH)) {
+                break;
+            }
+            chp++;
+        }
+        if (i >= NAME_LEN) { /* Name is too long */
+            return SYSERR;
+        }
+
+        chp++;
+    }
+
     if (retval1 == 0) {
         disk = fsystem.ram0dskdev;
         root = &fsystem.rt0;
@@ -73,10 +90,8 @@ status fstat(
     pnode1 = &node1;
     pnode2 = &node2;
     memcpy((char *)pnode1, (char *)root, sizeof(struct inode));
+    chp = filename + 5;
     while (*chp != NULLCH) {
-        if (*chp == '/') { /* 2 or more forward slashes were found following each other */
-            break;
-        }
         to = nam;
         while ((*chp != NULLCH) && (*chp != '/')) {
             *to++ = *chp++;
@@ -102,7 +117,7 @@ status fstat(
             }
             if (i == pnode1->filestat.size) { /* No directory was found by the name in nam */
                 break;
-            }            
+            }
             memcpy((char *)pnode1, (char *)pnode2, sizeof(struct inode));
         }
         else { /* nam holds a file name */
@@ -152,5 +167,11 @@ status fstat(
     filestat->ctime = pnode2->filestat.ctime;
     filestat->mtime = pnode2->filestat.mtime;
 
+    if (retval1 == 0) {
+        signal(fsystem.lmf_mutex0);
+    }
+    else {
+        signal(fsystem.lmf_mutex1);
+    }
     return OK;
 }

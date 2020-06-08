@@ -2,8 +2,6 @@
 
 #include <xinu.h>
 
-#define DFILL   '+'     /* character used to fill a disk block */
-
 /*------------------------------------------------------------------------
 * dballoc - Allocate a new data block from free list on disk
 *           (assumes corresponding RAMDISK mutex is held)
@@ -27,12 +25,12 @@ dbid32 dballoc (
     }
 
     if (dnum == LF_DNULL) { /* Ran out of free data blocks */
-        panic("out of data blocks");
+        return SYSERR;
     }
 
     retval = read(disk, (char *)dbuff, dnum);
     if (retval == SYSERR) {
-        panic("dballoc cannot read disk block\n\r");
+        return SYSERR;
     }
 
     /* Unlink d-block from free list */
@@ -46,6 +44,6 @@ dbid32 dballoc (
 
     /* Fill data block to erase old data */
     
-    memset((char *)dbuff, DFILL, RM_BLKSIZ);
+    memset((char *)dbuff, NULLCH, RM_BLKSIZ);
     return dnum;
 }
