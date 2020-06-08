@@ -11,7 +11,7 @@ devcall	lfgetc (
 	)
 {
 	struct lfcblk *lfptr; /* Ptr to open file table entry */
-
+	int32 singleByte; /* Next data byte */
 	/* Obtain Exclusive access to the file */
 
 	lfptr = &lftab[devptr->dvminor];
@@ -29,6 +29,21 @@ devcall	lfgetc (
 		signal(lfptr->lfmutex);
 		return EOF;
 	}
+
+
+	/* if the byte pointer is beyond the current the block call setup */
+
+	if ( lfptr->lfbyte >= lfptr->lfdblock[RM_BLKSIZ]) { /* possible error */
+		lfsetup(lfptr);
+	}
+	/* Extract the next byte and update the related variables */
+
+	singleByte = 0xff & *lfptr->lfbyte++;
+	lfptr->lfoffset++;
+	signal(lfptr->lfmutex);
+	return singleByte;
+
+
 	
     return OK;
 }

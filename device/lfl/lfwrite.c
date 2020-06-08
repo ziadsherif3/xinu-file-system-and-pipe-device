@@ -12,5 +12,15 @@ devcall	lfwrite (
       int32 count   /* Number of bytes to write */
 	)
 {
-    return OK;
+    int32 i; /* Number of Bytes written */
+    if (count < 0) {
+        return SYSERR;
+    }
+    /* Iterate and write */
+    for (i = 0; i < count; i++) {
+        if (lfputc(devptr, *buff++) == SYSERR) {
+            return SYSERR;
+        }
+    }
+    return count;
 }

@@ -11,5 +11,6 @@ devcall	lfseek (
       int32 offset      /* Byte position in the file */
 	)
 {
+    struct lfcblk *lfptr;
     return OK;
 }
