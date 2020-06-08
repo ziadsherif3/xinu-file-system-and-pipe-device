@@ -29,5 +29,9 @@ devcall	lfseek (
         return SYSERR;
     }
 
+    /* Record offset, and invalidate the byte pointer */
+    lfptr->lfoffset = offset;
+    lfptr->lfbyte = &lfptr->lfdblock[RM_BLKSIZ];
+    signal(lfptr->lfmutex);
     return OK;
 }
