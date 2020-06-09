@@ -24,7 +24,7 @@ devcall	lfinit (
 	lfptr->lfinode = (struct inode *) NULL;
 	lfptr->lfdbdirty = FALSE;
 	lfptr->lfoffset = 0;
-	lfptr->lfdnum = 0;
+	lfptr->lfdnum = LF_DNULL;
 	lfptr->lfbyte = &lfptr->lfdblock[RM_BLKSIZ];
 
 	for (i = 0; i < NAME_LEN; i++) {
