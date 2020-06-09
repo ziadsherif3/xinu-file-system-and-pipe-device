@@ -51,6 +51,7 @@ status lfsetup (
                 lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
                 lfptr->lfdbdirty = TRUE;
             }
+            
             else { /* Retrieve the correct indirect block */
                 if (offset < singleBlockRange) { /* with in the single indirect block range */
                     read(ramNo, singleIndex, lfptr->lfinode->datablcks[10]);
