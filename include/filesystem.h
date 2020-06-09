@@ -59,8 +59,8 @@ struct inode {
 struct lmf {
     did32 ram0dskdev;   /* Device ID of RAMDISK0 */
     did32 ram1dskdev;   /* Device ID of RAMDISK1 */
-    sid32 lmf_mutex0;   /* Mutex for the root of RAMDISK0 */
-    sid32 lmf_mutex1;   /* Mutex for the root of RAMDISK1 */
+    sid32 lmf_mutex0;   /* Mutex for RAMDISK0 */
+    sid32 lmf_mutex1;   /* Mutex for RAMDISK1 */
     sid32 lftabmutex;   /* Mutex for lftab */
     struct inode rt0;   /* Root for RAMDISK0 */
     struct inode rt1;   /* Root for RAMDISK1 */
