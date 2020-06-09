@@ -29,7 +29,7 @@ status lfflush (
     kprintf("lfflush: Data Block number = %d\n");
 
     if (lfptr->lfdbdirty) {
-        write(ram,lfptr->lfinode, iNodeNumber );
+        write(ram,(char*)lfptr->lfinode, iNodeNumber );
         if (dataBlockNumber != LF_DNULL) {
             write(ram, lfptr->lfdblock, dataBlockNumber);
         }

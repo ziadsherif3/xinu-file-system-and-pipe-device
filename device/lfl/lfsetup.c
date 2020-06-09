@@ -33,16 +33,16 @@ status lfsetup (
 
     /* check of the file is empty */
     if (dnum == LF_DNULL) { /* Case 0: allocate a new block and adjust the related fields */
-        dnum = dballoc(lfptr->lfdblock, ramNo);
+        dnum = dballoc( (struct lfdbfree *) lfptr->lfdblock, ramNo);
         lfptr->lfdnum = dnum;
         *lfptr->lfinode->datablcks = dnum;
-        lfptr->lfbyte = &lfptr->lfdblock;
+        lfptr->lfbyte = lfptr->lfdblock;
         lfptr->lfdbdirty = TRUE;
     }
 
     else { /* File is Not empty */
 
-        if ( offset  < lfptr->lfinode->filestat.size) { /* Case 1: setup is invoked by a backward seek or getc*/
+        if ( offset  < lfptr->lfinode->filestat.size) { /* Case 1: setup is invoked by seek or getc*/
             i = offset /RM_BLKSIZ;
             if ( i < 9) { /* A dirext Block Found */
                 lfptr->lfdnum = lfptr->lfinode->datablcks[i];
@@ -53,17 +53,18 @@ status lfsetup (
             }
             else { /* Retrieve the correct indirect block */
                 if (offset < singleBlockRange) { /* with in the single indirect block range */
-                    read(ramNo, singleIndex, lfptr->lfinode->datablcks[10]);
+                    read(ramNo, (char*) singleIndex, lfptr->lfinode->datablcks[10]);
                     i = (offset/RM_BLKSIZ) - 10; // Holds the index in the single indirect block
-                    lfptr->lfdnum = ;
+                    lfptr->lfdnum = singleIndex[i];
                     read(ramNo, lfptr->lfdblock,lfptr->lfdnum);
                     lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
                     lfptr->lfdbdirty = TRUE;
                 }
                 else { /* within the double indirect block range */
-                    read(ramNo, masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+                    read(ramNo, (char*) masterDoubleIndex, lfptr->lfinode->datablcks[11]);
                     i = (offset/RM_BLKSIZ) - 138; //bypass direct and single indirect indeces */
                     i/=128; //Holds the index of the master double indirect block
+
                     
                 }
             }
@@ -81,10 +82,10 @@ status lfsetup (
 
             if (!indirectFlag) { /* Current Block is a direct Data Block */
                 if ( i < 9) { /* Case 2: There are still free data blocks */
-                    dnum = dballoc(lfptr->lfdblock, ramNo);
+                    dnum = dballoc( (struct lfdbfree *) lfptr->lfdblock, ramNo);
                     lfptr->lfdnum = dnum;
                     lfptr->lfinode->datablcks[i+1] = dnum;
-                    lfptr->lfbyte = &lfptr->lfdblock;
+                    lfptr->lfbyte = lfptr->lfdblock;
                     lfptr->lfdbdirty = TRUE;
                 }
 
