@@ -18,9 +18,9 @@ status lfsetup (
     bool8 indirectFlag = TRUE; /* Flag to indicate a indirect datablock */
     int32 offset;   /* Current file offset */
     int32 singleBlockRange = 65576;
-    char singleIndex[RM_BLKSIZ]; /* Single indirect index block */
-    char masterDoubleIndex[RM_BLKSIZ]; /* primary Double indirect index block */
-    char secondaryDoubleIndex[RM_BLKSIZ]; /* single index within the double indirect index */
+    int32 singleIndex[RM_BLKSIZ/4]; /* Single indirect index block */
+    int32 masterDoubleIndex[RM_BLKSIZ/4]; /* primary Double indirect index block */
+    int32 secondaryDoubleIndex[RM_BLKSIZ/4]; /* single index within the double indirect index */
     /* lfflush if necessary */
     if (lfptr->lfdbdirty) {
         lfflush(lfptr);
