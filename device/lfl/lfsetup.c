@@ -12,12 +12,15 @@ status lfsetup (
 )
 {
     dbid32 dnum;    /* Data block to fetch */
-    struct inode * fileInode;    /* pointer to the file's inode */
     int32 * datablocks;     /* pointer to datablocks array */
     did32 ramNo;    /* ram disk that holds the file data */
     int16 i;    /* Counter used to index the Datablocks array */
     bool8 indirectFlag = TRUE; /* Flag to indicate a indirect datablock */
     int32 offset;   /* Current file offset */
+    int32 singleBlockRange = 65576;
+    char singleIndex[RM_BLKSIZ]; /* Single indirect index block */
+    char masterDoubleIndex[RM_BLKSIZ]; /* primary Double indirect index block */
+    char secondaryDoubleIndex[RM_BLKSIZ]; /* single index within the double indirect index */
     /* lfflush if necessary */
     if (lfptr->lfdbdirty) {
         lfflush(lfptr);
@@ -26,8 +29,7 @@ status lfsetup (
     ramNo = lfptr->lfram;
     dnum = lfptr->lfdnum;
     offset = lfptr->lfoffset;
-    fileInode = lfptr->lfinode;
-    datablocks = fileInode->datablcks;
+    datablocks = lfptr->lfinode->datablcks;
 
     /* check of the file is empty */
     if (dnum == LF_DNULL) { /* Case 0: allocate a new block and adjust the related fields */
@@ -42,11 +44,27 @@ status lfsetup (
 
         if ( offset  < lfptr->lfinode->filestat.size) { /* Case 1: setup is invoked by a backward seek or getc*/
             i = offset /RM_BLKSIZ;
-            lfptr->lfdnum = lfptr->lfinode->datablcks[i];
-            kprintf("lfsetup: dnum = %d",lfptr->lfdnum);
-            read(ramNo, lfptr->lfdblock, lfptr->lfdnum);
-            lfptr->lfbyte = &lfptr->lfbyte[offset % RM_BLKSIZ];
-            lfptr->lfdbdirty = TRUE;
+            if ( i < 9) { /* A dirext Block Found */
+                lfptr->lfdnum = lfptr->lfinode->datablcks[i];
+                kprintf("lfsetup: dnum = %d",lfptr->lfdnum);
+                read(ramNo, lfptr->lfdblock, lfptr->lfdnum);
+                lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
+                lfptr->lfdbdirty = TRUE;
+            }
+            else { /* Retrieve the correct indirect block */
+                if (offset < singleBlockRange) { /* with in the single indirect block range */
+                    read(ramNo, singleIndex, lfptr->lfinode->datablcks[10]);
+                    i = (offset/RM_BLKSIZ) - 10; // Holds the index in the single indirect block
+                    lfptr->lfdnum = ;
+                    read(ramNo, lfptr->lfdblock,lfptr->lfdnum);
+                    lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
+                    lfptr->lfdbdirty = TRUE;
+                }
+                else { /* within the double indirect block range */
+                    read(ramNo, singleIndex, lfptr->lfinode->datablcks[11]);
+                    
+                }
+            }
         }
 
         else { /* Setup is invoked by putc */
@@ -68,9 +86,8 @@ status lfsetup (
                     lfptr->lfdbdirty = TRUE;
                 }
 
-                else { /* Case 3: initialize and allocate single indirect */
-
-
+                else { /* Case 3: initialize and allocate a single indirect block */
+                    
                 }
             }
 
