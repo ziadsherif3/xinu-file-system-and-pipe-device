@@ -61,7 +61,9 @@ status lfsetup (
                     lfptr->lfdbdirty = TRUE;
                 }
                 else { /* within the double indirect block range */
-                    read(ramNo, singleIndex, lfptr->lfinode->datablcks[11]);
+                    read(ramNo, masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+                    i = (offset/RM_BLKSIZ) - 138; //bypass direct and single indirect indeces */
+                    i/=128; //Holds the index of the master double indirect block
                     
                 }
             }
