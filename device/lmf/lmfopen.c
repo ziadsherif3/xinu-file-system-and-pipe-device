@@ -237,6 +237,7 @@ devcall	lmfopen (
         else {
             signal(fsystem.lmf_mutex1);
         }
+        signal(fsystem.lftabmutex);
         return SYSERR;
 	}
 
