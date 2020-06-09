@@ -14,10 +14,11 @@ status lfsetup (
     dbid32 dnum;    /* Data block to fetch */
     int32 * datablocks;     /* pointer to datablocks array */
     did32 ramNo;    /* ram disk that holds the file data */
-    int16 i;    /* Counter used to index the Datablocks array */
+    int32 i;    /* Counter used to index the Datablocks array */
+    int32 j; /* secondary Counter to aid with double indirect indexing */
     bool8 indirectFlag = TRUE; /* Flag to indicate a indirect datablock */
     int32 offset;   /* Current file offset */
-    int32 singleBlockRange = 65576;
+    int32 singleBlockRange = 65576; /* Max number of bytes held by the direct and single indirect blocks */
     int32 singleIndex[RM_BLKSIZ/4]; /* Single indirect index block */
     int32 masterDoubleIndex[RM_BLKSIZ/4]; /* primary Double indirect index block */
     int32 secondaryDoubleIndex[RM_BLKSIZ/4]; /* single index within the double indirect index */
@@ -64,8 +65,14 @@ status lfsetup (
                     read(ramNo, (char*) masterDoubleIndex, lfptr->lfinode->datablcks[11]);
                     i = (offset/RM_BLKSIZ) - 138; //bypass direct and single indirect indeces */
                     i/=128; //Holds the index of the master double indirect block
-
-                    
+                    read(ramNo, (char *) secondaryDoubleIndex, masterDoubleIndex[i]);
+                    j = offset - singleBlockRange;// start with the start of the double indirect block
+                    j = j - (i * 65536);
+                    j/=RM_BLKSIZ;
+                    lfptr->lfdnum = secondaryDoubleIndex[j];
+                    read(ramNo, lfptr->lfdblock,lfptr->lfdnum);
+                    lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
+                    lfptr->lfdbdirty = TRUE;   
                 }
             }
         }
@@ -96,10 +103,9 @@ status lfsetup (
 
             else { /* Direct blocks are full */
                 /* Case 4: Check the if the single indirect blocks are full */
-                datablocks = datablocks +2; // points to the double indirect field
-                if (*datablocks != LF_DNULL) { /* Case 4.1: Traverse the single indirect block */
-
-
+                
+                if (lfptr->lfinode->datablcks[11] != LF_DNULL) { /* Case 4.1: Traverse the single indirect block */
+                    
                 }
 
                 else { /* Case 4.2: Single indirect Block is Full, Traverse the double indirect Block */
