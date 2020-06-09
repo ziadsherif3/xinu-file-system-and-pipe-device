@@ -101,9 +101,7 @@ extern struct lmf fsystem;
 /* Helper functions declerations */
 
 dbid32 dballoc (struct lfdbfree *, int32);
-void dbclear(char *);
 status dbfree(did32, dbid32);
 status fstat(char *, struct stat *);
 status lfflush (struct lfcblk *);
 status lfsetup (struct lfcblk *);
-status lftruncate (struct lfcblk *);
