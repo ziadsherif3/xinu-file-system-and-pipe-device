@@ -15,7 +15,7 @@ status lfsetup (
     struct inode * fileInode;    /* pointer to the file's inode */
     int32 * datablocks;     /* pointer to datablocks array */
     did32 ramNo;    /* ram disk that holds the file data */
-    int16 i;    /* Counter */
+    int16 i;    /* Counter used to index the Datablocks array */
     bool8 indirectFlag = TRUE; /* Flag to indicate a indirect datablock */
     int32 offset;   /* Current file offset */
     /* lfflush if necessary */
@@ -40,45 +40,54 @@ status lfsetup (
 
     else { /* File is Not empty */
 
-        if ( (offset % RM_BLKSIZ) != 0 ) { /* Case 1: setup is invoked by a backward seek */
-
-        }
-        for (i = 0; i<10; i++) {
-            if ( *datablocks == dnum) {
-                indirectFlag = FALSE;
-                break;
-            }
-            datablocks++;
+        if ( offset  < lfptr->lfinode->filestat.size) { /* Case 1: setup is invoked by a backward seek or getc*/
+            i = offset /RM_BLKSIZ;
+            lfptr->lfdnum = lfptr->lfinode->datablcks[i];
+            kprintf("lfsetup: dnum = %d",lfptr->lfdnum);
+            read(ramNo, lfptr->lfdblock, lfptr->lfdnum);
+            lfptr->lfbyte = &lfptr->lfbyte[offset % RM_BLKSIZ];
+            lfptr->lfdbdirty = TRUE;
         }
 
-        if (!indirectFlag) { /* Current Block is a direct Data Block */
-            if ( i < 9) { /* Case 2: There are still free data blocks */
-                dnum = dballoc(lfptr->lfdblock, ramNo);
-                lfptr->lfdnum = dnum;
-                lfptr->lfinode->datablcks[i+1] = dnum;
-                lfptr->lfbyte = &lfptr->lfdblock;
-                lfptr->lfdbdirty = TRUE;
+        else { /* Setup is invoked by putc */
+
+            for (i = 0; i<10; i++) {
+                if ( *datablocks == dnum) {
+                    indirectFlag = FALSE;
+                    break;
+                }
+                datablocks++;
             }
 
-            else { /* Case 3: initialize and allocate single indirect */
+            if (!indirectFlag) { /* Current Block is a direct Data Block */
+                if ( i < 9) { /* Case 2: There are still free data blocks */
+                    dnum = dballoc(lfptr->lfdblock, ramNo);
+                    lfptr->lfdnum = dnum;
+                    lfptr->lfinode->datablcks[i+1] = dnum;
+                    lfptr->lfbyte = &lfptr->lfdblock;
+                    lfptr->lfdbdirty = TRUE;
+                }
+
+                else { /* Case 3: initialize and allocate single indirect */
 
 
-            }
-        }
-
-        else { /* Direct blocks are full */
-            /* Case 4: Check the if the single indirect blocks are full */
-            datablocks = datablocks +2; // points to the double indirect field
-            if (*datablocks != LF_DNULL) { /* Case 4.1: Traverse the single indirect block */
-
-
-            }
-
-            else { /* Case 4.2: Single indirect Block is Full, Traverse the double indirect Block */
-
-
+                }
             }
 
+            else { /* Direct blocks are full */
+                /* Case 4: Check the if the single indirect blocks are full */
+                datablocks = datablocks +2; // points to the double indirect field
+                if (*datablocks != LF_DNULL) { /* Case 4.1: Traverse the single indirect block */
+
+
+                }
+
+                else { /* Case 4.2: Single indirect Block is Full, Traverse the double indirect Block */
+
+
+                }
+
+            }
         }
     }
     
