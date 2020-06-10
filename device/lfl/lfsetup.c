@@ -162,6 +162,11 @@ status lfsetup (
                            break;
                        }
                     }
+                    if ( i == 15) { /* max file size*/
+                    kprintf("Max file size\n");
+                    return SYSERR;
+                    }
+
                     if ( j < 128 ) { /* Single indirect is not empty */
                         dnum = dballoc((struct ldbfree *) lfptr->lfdblock, ramNo); 
                         secondaryDoubleIndex[j] = dnum;
@@ -169,13 +174,21 @@ status lfsetup (
                         lfptr->lfbyte = lfptr->lfdblock;
                         lfptr->lfdbdirty = TRUE;
                         write(ramNo, (char*) secondaryDoubleIndex, masterDoubleIndex[i]);
-
-                        }
-
+                    }
+                    else { /* allocate a new single indirect block */
+                        inum = dballoc((struct ldbfree *) secondaryDoubleIndex, ramNo);
+                        dnum = dballoc((struct ldbfree *) lfptr->lfdblock, ramNo);
+                        masterDoubleIndex[i] = inum;
+                        secondaryDoubleIndex[0] = dnum;
+                        lfptr->lfdnum = dnum;
+                        lfptr->lfbyte = lfptr->lfdblock;
+                        lfptr->lfdbdirty = TRUE;
+                        write(ramNo, (char*) masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+                        write(ramNo, (char*) secondaryDoubleIndex, inum); 
+                    }
                 }
             }
         }
     }
-    
     return OK;
 }
