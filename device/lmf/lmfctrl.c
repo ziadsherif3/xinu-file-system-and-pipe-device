@@ -233,8 +233,9 @@ local	status	fcreate(char *name)
 	}
 
 	pnode2->type = FILE;
+    pnode2->sdev = -1;
 	pnode2->filestat.ino = retval;
-	pnode2->filestat.dev = -1;
+	pnode2->filestat.dev = disk;
 	pnode2->filestat.size = 0;
 	pnode2->filestat.acctime = pnode2->filestat.ctime = pnode2->filestat.mtime = clktime;
     for (i = 0; i < (sizeof(pnode2->datablcks) / sizeof(int32)); i++) {
@@ -464,6 +465,7 @@ local	status	dircreate(char *name)
 
     pnode2->type = DIR;
 	pnode2->filestat.ino = retval;
+    pnode2->filestat.dev = disk;
 	pnode2->filestat.size = 0;
 	strncpy(pnode2->name, nam, strlen(nam) + 1);
 	strncpy(pnode1->contents[pnode1->filestat.size].name, nam, strlen(nam) + 1);
@@ -656,7 +658,7 @@ local	status	fdelete(char *name)
         return SYSERR;
 	}
 
-    if (pnode2->filestat.dev != -1) { /* File is opened */
+    if (pnode2->sdev != -1) { /* File is opened */
         if (retval1 == 0) {
             signal(fsystem.lmf_mutex0);
         }
@@ -997,7 +999,7 @@ local   status  dircheck(struct inode *pnode, did32 disk)
             }
         }
         else if (pnode1->type == FILE) {
-            if (pnode1->filestat.dev != -1) {
+            if (pnode1->sdev != -1) {
                 return SYSERR;
             }
         }

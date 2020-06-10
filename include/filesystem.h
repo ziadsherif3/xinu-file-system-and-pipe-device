@@ -47,11 +47,12 @@ struct stat {
 
 struct inode {
     int32 type;                         /* Type file or directory */
+    int32 sdev;                         /* pseudo-device number if the file is opened, -1 if not */
     struct tuple contents[ntuples];     /* Tuples in case of an i-node of type DIR */
     struct stat filestat;               /* stat information for an i-node of type FILE */
     int32 datablcks[12];                /* Data blocks for an i-node of type FILE */
     char name[NAME_LEN];                /* Name of file/directory of this i-node */
-    char padding[12];                   /* Padding data */
+    char padding[8];                    /* Padding data */
 };
 
 /* Structure used by the the local file system (initialized in lmfinit) */

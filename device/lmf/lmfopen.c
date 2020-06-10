@@ -226,7 +226,7 @@ devcall	lmfopen (
 
     /* Update the i-node on disk */
 
-    pnode2->filestat.dev = lfptr->lfdev;
+    pnode2->sdev = lfptr->lfdev;
     pnode2->filestat.acctime = clktime;
     retval = write(disk, (char *)pnode2, pnode2->filestat.ino);
 
