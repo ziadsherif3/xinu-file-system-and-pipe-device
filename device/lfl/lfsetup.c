@@ -113,6 +113,7 @@ status lfsetup (
             else { /* Direct blocks are full */
                 /* Case 4: Check the if the single indirect blocks are full */
                 
+
                 if (lfptr->lfinode->datablcks[11] != LF_DNULL) { /* Case 4.1: allocate a new data block in the single indirect block */
                     read (ramNo, (char*) singleIndex, lfptr->lfinode->datablcks[10]);
                     for (i = 0; i < 128; i++) {
@@ -141,6 +142,10 @@ status lfsetup (
                         write(ramNo, (char*) masterDoubleIndex, inum);
                         write(ramNo, (char*) secondaryDoubleIndex, inum2);
                     }
+
+                if (lfptr->lfinode->datablcks[11] != LF_DNULL) { /* Case 4.1: Traverse the single indirect block */
+                    
+
                 }
 
                 else { /* Case 4.3: Single indirect Block is Full, Traverse the double indirect Block */
