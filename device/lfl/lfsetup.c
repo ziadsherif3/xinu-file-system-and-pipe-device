@@ -318,6 +318,10 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
         write(ramNo, (char *)masterDoubleIndex, lfptr->lfinode->datablcks[11]);
     }
 
+    if (offset > lfptr->lfinode->filestat.size) { /* Update the file size if the offset is greater than the file size */
+        lfptr->lfinode->filestat.size = offset;
+    }
+
     if (ramNo == RAMDISK0) {
         signal(fsystem.lmf_mutex0);
     }
