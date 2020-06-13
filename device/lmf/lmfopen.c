@@ -250,5 +250,4 @@ devcall	lmfopen (
     signal(fsystem.lftabmutex);
 
     return lfptr->lfdev;
-
 }

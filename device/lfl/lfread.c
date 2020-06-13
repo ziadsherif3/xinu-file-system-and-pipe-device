@@ -12,29 +12,29 @@ devcall	lfread (
       int32 count   /* Max bytes to read */
 	)
 {
+    struct lfcblk *lfptr; /* Ptr to an open file table entry */
     uint32 numRead; /* Number of Bytes read */
-    int32 nextByte; /* character or EOF or SYSERR */
+    int32 nextByte; /* Character or EOF */
 
-    if (count < 0) {
+    lfptr = &lftab[devptr->dvminor];
+
+    if (lfptr->lfmode != rmode) {
         return SYSERR;
     }
+
+    if ((count <= 0) || (lfptr->lfoffset >= lfptr->lfinode->filestat.size)) {
+        return SYSERR;
+    }
+
     /* Use lfgetc to read bytes */
-    for ( numRead = 0; numRead < count; numRead++) {
+    
+    for (numRead = 0; numRead < count; numRead++) {
         nextByte = lfgetc(devptr);
-        if (nextByte == SYSERR) { 
-            return SYSERR;
-        } 
-        else if (nextByte == EOF) { /* unexpected EOF */
-            if (numRead == 0) {
-                return EOF;
-            }
-            else {
-                return numRead;
-            }
-        }
-        else {
-            *buff++ = (char) (0xff & nextByte);
+        *buff++ = (char) (0xff & nextByte);
+        if (nextByte == EOF) { /* unexpected EOF */
+            break;
         }
     }
+    
     return numRead;
 }

@@ -21,7 +21,7 @@ devcall	lmfinit (
 	fsystem.ram0dskdev = RAMDISK0;
 	fsystem.ram1dskdev = RAMDISK1;
 
-	/* Create a mutual exclusion semaphore */
+	/* Create mutual exclusion semaphores */
 
 	fsystem.lmf_mutex0 = semcreate(1);
 	fsystem.lmf_mutex1 = semcreate(1);
@@ -34,6 +34,8 @@ devcall	lmfinit (
 	fsystem.rt0present = FALSE;
 	fsystem.rt1present = FALSE;
 	fsystem.r0freepos = fsystem.r1freepos = 1;		/* Indicate the block number of the first disk block in free list of both disks */
+
+	fsystem.r0freenum = fsystem.r1freenum = RM_BLKS - 1;
 
 	retval = lmfcreate();
 	if(retval == SYSERR){
@@ -63,7 +65,9 @@ local	status	lmfcreate(void)
 	strncpy(rt.name, name, strlen(name) + 1);
 	rt.filestat.ino = 0;
 	rt.filestat.size = 0;
+	rt.filestat.dev = RAMDISK0;
 	retval = write(RAMDISK0, (char *)&rt, 0);
+	rt.filestat.dev = RAMDISK1;
 	retval = write(RAMDISK1, (char *)&rt, 0);
 	if (retval == SYSERR) {
 		return SYSERR;

@@ -25,6 +25,8 @@
 #define FMKDIR      2           /* directory create */
 #define FRMDIR      3           /* directory delete */
 
+#define MAXFILESIZE 8459264     /* 10 * 512 + 128 * 512 + 128 * 128 * 512 */
+
 /* Structure for the tuple used in directory i-node */
 
 struct tuple {
@@ -67,8 +69,10 @@ struct lmf {
     struct inode rt1;   /* Root for RAMDISK1 */
     bool8 rt0present;   /* True when root0 is in memory */
     dbid32 r0freepos;   /* Current position (start of free list) for RAMDISK0 */
+    int32 r0freenum;    /* Number of free disk blocks for RAMDISK0 */
     bool8 rt1present;   /* True when root1 is in memory */
     dbid32 r1freepos;   /* Current position (start of free list) for RAMDISK1 */
+    int32 r1freenum;    /* Number of free disk blocks for RAMDISK1 */
 };
 
 /* Structure for control block of local file pseudo-device */
@@ -77,7 +81,6 @@ struct lfcblk {
     byte lfstate;               /* Is entry free or used */
     did32 lfdev;                /* Device ID of this device */
     did32 lfram;                /* Which ram disk RAMDISK0/RAMDISK1 the file is found in? */
-    sid32 lfmutex;              /* Mutex for this file */
     struct inode *lfinode;      /* In-memory i-node of file */
     int32 lfmode;               /* Mode (read/write) */
     uint32 lfoffset;            /* Byte position of next byte to read or write */
@@ -105,4 +108,4 @@ dbid32 dballoc (struct lfdbfree *, int32);
 status dbfree(did32, dbid32);
 status fstat(char *, struct stat *);
 status lfflush (struct lfcblk *);
-status lfsetup (struct lfcblk *);
+status lfsetup (struct lfcblk *, int32);

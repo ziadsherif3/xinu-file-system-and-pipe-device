@@ -19,8 +19,7 @@ devcall	lfinit (
 	/* Initialize control block entry */
 	
 	lfptr->lfstate = FREE; /* Device is currently unused */ 
-	lfptr->lfdev = devptr->dvnum; /* Set device ID */ 
-	lfptr->lfmutex = semcreate(1); /* Create the mutex semaphore */
+	lfptr->lfdev = devptr->dvnum; /* Set device ID */
 	lfptr->lfinode = (struct inode *) NULL;
 	lfptr->lfdbdirty = FALSE;
 	lfptr->lfoffset = 0;
@@ -31,7 +30,7 @@ devcall	lfinit (
 		lfptr->lfname[i] = NULLCH;
 	}
 
-	memset((char *) &lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+	memset((char *)&lfptr->lfdblock, NULLCH, RM_BLKSIZ);
     
 	return OK;
 }

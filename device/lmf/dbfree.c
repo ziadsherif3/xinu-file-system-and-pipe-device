@@ -17,10 +17,12 @@ status dbfree(
     if (diskdev == RAMDISK0) {
         buf.lf_nextdb = fsystem.r0freepos;
         fsystem.r0freepos = dnum;
+        fsystem.r0freenum++;
     }
     else {
         buf.lf_nextdb = fsystem.r1freepos;
         fsystem.r1freepos = dnum;
+        fsystem.r1freenum++;
     }
     write(diskdev, (char *)&buf, dnum);
 

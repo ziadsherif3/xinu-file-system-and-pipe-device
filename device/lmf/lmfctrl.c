@@ -239,7 +239,7 @@ local	status	fcreate(char *name)
 	pnode2->filestat.size = 0;
 	pnode2->filestat.acctime = pnode2->filestat.ctime = pnode2->filestat.mtime = clktime;
     for (i = 0; i < (sizeof(pnode2->datablcks) / sizeof(int32)); i++) {
-        pnode2->datablcks[i] = -1;
+        pnode2->datablcks[i] = LF_DNULL;
     }
 	strncpy(pnode2->name, nam, strlen(nam) + 1);
 	strncpy(pnode1->contents[pnode1->filestat.size].name, nam, strlen(nam) + 1);
@@ -908,16 +908,16 @@ local   status  truncate(struct inode *pnode, did32 disk)
     int32 dblock[RM_BLKSIZ / sizeof(int32)];    /* Double indirect block buffer */
 
     for (i = 0; i < ((sizeof(pnode->datablcks) / sizeof(int32)) - 2); i++) {
-        if (pnode->datablcks[i] == -1) {
+        if (pnode->datablcks[i] == LF_DNULL) {
             break;
         }
         dbfree(disk, pnode->datablcks[i]);
     }
 
-    if (pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 2] != -1) { /* Check for single indirect block */
+    if (pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 2] != LF_DNULL) { /* Check for single indirect block */
         read(disk, (char *)sblock, pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 2]);
         for (i = 0; i < (sizeof(sblock) / sizeof(int32)); i++) {
-            if (sblock[i] == -1) {
+            if (sblock[i] == LF_DNULL) {
                 break;
             }
             dbfree(disk, sblock[i]);
@@ -926,15 +926,15 @@ local   status  truncate(struct inode *pnode, did32 disk)
         dbfree(disk, pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 2]);
     }
 
-    if (pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 1] != -1) { /* Check for double indirect block */
+    if (pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 1] != LF_DNULL) { /* Check for double indirect block */
         read(disk, (char *)dblock, pnode->datablcks[(sizeof(pnode->datablcks) / sizeof(int32)) - 1]);
         for (i = 0; i < (sizeof(dblock) / sizeof(int32)); i++) {
-            if (dblock[i] == -1) {
+            if (dblock[i] == LF_DNULL) {
                 break;
             }
             read(disk, (char *)sblock, dblock[i]);
             for (j = 0; j < (sizeof(sblock) / sizeof(int32)); j++) {
-                if (sblock[j] == -1) {
+                if (sblock[j] == LF_DNULL) {
                     break;
                 }
                 dbfree(disk, sblock[j]);

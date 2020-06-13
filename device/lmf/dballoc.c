@@ -37,9 +37,11 @@ dbid32 dballoc (
 
     if (disk == RAMDISK0) {
         fsystem.r0freepos = dbuff->lf_nextdb;
+        fsystem.r0freenum--;
     }
     else {
         fsystem.r1freepos = dbuff->lf_nextdb;
+        fsystem.r1freenum--;
     }
 
     /* Fill data block to erase old data */
