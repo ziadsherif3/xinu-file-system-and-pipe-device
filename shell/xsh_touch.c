@@ -1,11 +1,12 @@
-/* xsh_rmdir.c - xsh_rmdir */
+/* xsh_touch.c - xsh_touch */
 
 #include <xinu.h>
 
+
 /*------------------------------------------------------------------------
- * xhs_rmdir - Delete an existing directory provided it's empty
+ * xhs_touch - Updates access and modification time of a file
  *------------------------------------------------------------------------
  */
-shellcmd xsh_rmdir(int nargs, char *args[]) {
-    
+shellcmd xsh_touch(int nargs, char *args[]) {
+
 }

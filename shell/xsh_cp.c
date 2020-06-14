@@ -1,11 +1,12 @@
-/* xsh_rmdir.c - xsh_rmdir */
+/* xsh_cp.c - xsh_cp */
 
 #include <xinu.h>
 
+
 /*------------------------------------------------------------------------
- * xhs_rmdir - Delete an existing directory provided it's empty
+ * xhs_cp - Copies source file into destination
  *------------------------------------------------------------------------
  */
-shellcmd xsh_rmdir(int nargs, char *args[]) {
-    
+shellcmd xsh_cp(int nargs, char *args[]) {
+
 }

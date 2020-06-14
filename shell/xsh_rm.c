@@ -3,9 +3,9 @@
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- * xhs_rmdir - Delete an existing directory provided it's empty
+ * xhs_rm - Delete an existing file
  *------------------------------------------------------------------------
  */
-shellcmd xsh_rmdir(int nargs, char *args[]) {
+shellcmd xsh_rm(int nargs, char *args[]) {
     
 }

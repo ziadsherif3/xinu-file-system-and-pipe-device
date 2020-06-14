@@ -1,11 +1,12 @@
-/* xsh_rmdir.c - xsh_rmdir */
+/* xsh_pwd.c - xsh_pwd */
 
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- * xhs_rmdir - Delete an existing directory provided it's empty
+ * xhs_pwd - Display Current Directory path
  *------------------------------------------------------------------------
  */
-shellcmd xsh_rmdir(int nargs, char *args[]) {
-    
+shellcmd xsh_pwd(int nargs, char *args[]) {
+
+
 }
