@@ -36,11 +36,13 @@ devcall	lmfopen (
 
     if ((retval1 != 0) && (retval2 != 0)) {
         return SYSERR;
+        
     }
 
     chp = name + 5;
     
     if ((name[strlen(name) - 1] == '/') || (*chp == '/')){
+        
         return SYSERR;
     }
 
@@ -206,6 +208,7 @@ devcall	lmfopen (
             signal(fsystem.lmf_mutex1);
         }
         signal(fsystem.lftabmutex);
+        
         return SYSERR;
     }
 

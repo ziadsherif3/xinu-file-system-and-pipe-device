@@ -262,7 +262,7 @@ process	shell (
 		}
 
 		/* Open files and redirect I/O if specified */
-				if (inname != NULL) {
+		if (inname != NULL) {
 			stdinput = open(FSYSTEM,inname,"r");
 			if (stdinput == SYSERR) {
 				fprintf(dev, SHELL_INERRMSG, inname);
@@ -270,12 +270,15 @@ process	shell (
 			}
 		}
 		if (outname != NULL) {
-			stdoutput = open(FSYSTEM,outname,"w");
+			if ( (stdoutput = open(FSYSTEM, outname,"r")) == SYSERR) {
+				control(FSYSTEM, FCREATE,(int32) outname,0);
+				stdoutput = open(FSYSTEM, outname,"r");
+			}
 			if (stdoutput == SYSERR) {
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
 			} else {
-				control(stdoutput, FCREATE, 0, 0);
+				
 			}
 		}
 
