@@ -25,7 +25,7 @@
 #define FMKDIR      2           /* directory create */
 #define FRMDIR      3           /* directory delete */
 
-#define MAXFILESIZE 8459264     /* 10 * 512 + 128 * 512 + 128 * 128 * 512 */
+#define MAXFILESIZE 1048575     /* 10 * 512 + 128 * 512 + 128 * 14.9 * 512 */
 
 /* Structure for the tuple used in directory i-node */
 
