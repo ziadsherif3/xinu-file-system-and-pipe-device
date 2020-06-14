@@ -22,7 +22,16 @@ const	struct	cmdent	cmdtab[] = {
 	{"sleep",	FALSE,	xsh_sleep},
 	{"uptime",	FALSE,	xsh_uptime},
 	{"?",		FALSE,	xsh_help},
-	{"mkdir", TRUE,		xsh_mkdir}
+	{"mkdir", 	TRUE,	xsh_mkdir},
+	{"rmdir", 	TRUE,	xsh_rmdir},
+	{"ls", 		TRUE,	xsh_ls},
+	{"touch", 	TRUE,	xsh_touch},
+	{"cat", 	TRUE,	xsh_cat},
+	{"mv", 		TRUE,	xsh_mv},
+	{"rm", 		TRUE,	xsh_rm},
+	{"cp", 		TRUE,	xsh_cp},
+	{"pwd",		TRUE,	xsh_pwd},
+	{"cd", 		TRUE,	xsh_cd}
 
 };
 
@@ -254,7 +263,7 @@ process	shell (
 
 		/* Open files and redirect I/O if specified */
 				if (inname != NULL) {
-			stdinput = open(FSYSTEM,inname,"ro");
+			stdinput = open(FSYSTEM,inname,"r");
 			if (stdinput == SYSERR) {
 				fprintf(dev, SHELL_INERRMSG, inname);
 				continue;
