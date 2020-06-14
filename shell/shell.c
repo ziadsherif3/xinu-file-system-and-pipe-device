@@ -21,7 +21,8 @@ const	struct	cmdent	cmdtab[] = {
 	{"ramdisktest",	FALSE,	xsh_ramdisktest},
 	{"sleep",	FALSE,	xsh_sleep},
 	{"uptime",	FALSE,	xsh_uptime},
-	{"?",		FALSE,	xsh_help}
+	{"?",		FALSE,	xsh_help},
+	{"mkdir", TRUE,		xsh_mkdir}
 
 };
 
@@ -146,6 +147,45 @@ process	shell (
 		/* input/output redirection is none */
 
 		outname = inname = NULL;
+		if ( (ntok >=3) && ( (toktyp[ntok-2] == SH_TOK_LESS)
+				   ||(toktyp[ntok-2] == SH_TOK_GREATER))){
+			if (toktyp[ntok-1] != SH_TOK_OTHER) {
+				fprintf(dev,"%s\n", SHELL_SYNERRMSG);
+				continue;
+			}
+			if (toktyp[ntok-2] == SH_TOK_LESS) {
+				inname =  &tokbuf[tok[ntok-1]];
+			} else {
+				outname = &tokbuf[tok[ntok-1]];
+			}
+			ntok -= 2;
+			tlen = tok[ntok];
+		}
+
+
+		if ( (ntok >=3) && ( (toktyp[ntok-2] == SH_TOK_LESS)
+				   ||(toktyp[ntok-2] == SH_TOK_GREATER))){
+			if (toktyp[ntok-1] != SH_TOK_OTHER) {
+				fprintf(dev,"%s\n", SHELL_SYNERRMSG);
+				continue;
+			}
+			if (toktyp[ntok-2] == SH_TOK_LESS) {
+				if (inname != NULL) {
+				    fprintf(dev,"%s\n", SHELL_SYNERRMSG);
+				    continue;
+				}
+				inname = &tokbuf[tok[ntok-1]];
+			} else {
+				if (outname != NULL) {
+				    fprintf(dev,"%s\n", SHELL_SYNERRMSG);
+				    continue;
+				}
+				outname = &tokbuf[tok[ntok-1]];
+			}
+			ntok -= 2;
+			tlen = tok[ntok];
+		}
+
 
 		/* Verify remaining tokens are type "other" */
 
@@ -213,7 +253,22 @@ process	shell (
 		}
 
 		/* Open files and redirect I/O if specified */
-		/* feature removed by elmongui */
+				if (inname != NULL) {
+			stdinput = open(FSYSTEM,inname,"ro");
+			if (stdinput == SYSERR) {
+				fprintf(dev, SHELL_INERRMSG, inname);
+				continue;
+			}
+		}
+		if (outname != NULL) {
+			stdoutput = open(FSYSTEM,outname,"w");
+			if (stdoutput == SYSERR) {
+				fprintf(dev, SHELL_OUTERRMSG, outname);
+				continue;
+			} else {
+				control(stdoutput, FCREATE, 0, 0);
+			}
+		}
 
 		/* Spawn child thread for non-built-in commands */
 

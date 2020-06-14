@@ -51,3 +51,27 @@ extern	shellcmd  xsh_uptime	(int32, char *[]);
 
 /* in file xsh_help.c */
 extern	shellcmd  xsh_help	(int32, char *[]);
+
+/* in file xsh_mkdir */
+extern shellcmd xsh_mkdir (int32, char *[]);
+
+/* in file xsh_rmdir */
+extern shellcmd xsh_rmdir (int32, char *[]);
+
+/* in file xsh_ls */
+extern shellcmd xsh_ls (int32, char *[]);
+
+/* in file xsh_touch */
+extern shellcmd xsh_touch (int32, char *[]);
+
+/* in file xsh_rm */
+extern shellcmd xsh_rm (int32, char *[]);
+
+/* in file xsh_cat */
+extern shellcmd xsh_cat (int32, char *[]);
+
+/* in file xsh_mv */
+extern shellcmd xsh_mv (int32, char *[]);
+
+/* in file xsh_cp */
+extern shellcmd xsh_cp (int32, char *[]);
