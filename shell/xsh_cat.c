@@ -14,5 +14,21 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 		fprintf(stderr, "Usage: cat \"filePath\"\n");
 		return SYSERR;
 	}
+	did32 fileDev;	/* File device descriptor */
+	char  readBuff[100];	/* buffer to hold read characters */
+	uint64 numRead;	/* Number of Bytes read */
+	uint64 i;
+
+	if ( (fileDev = open(FSYSTEM, args[1], "r") )  == SYSERR) { /*Cannot open file */
+		return SYSERR;
+	}
+
+	/* Read the file */
+	numRead = read(fileDev, readBuff, MAXFILESIZE);
+	for (i = 0; i < numRead; i++) {
+		printf("%c",readBuff[i]);
+	}
+	close(fileDev);
+	return 0;
 
 }
