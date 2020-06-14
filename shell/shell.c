@@ -270,9 +270,9 @@ process	shell (
 			}
 		}
 		if (outname != NULL) {
-			if ( (stdoutput = open(FSYSTEM, outname,"r")) == SYSERR) {
+			if ( (stdoutput = open(FSYSTEM, outname,"w")) == SYSERR) {
 				control(FSYSTEM, FCREATE,(int32) outname,0);
-				stdoutput = open(FSYSTEM, outname,"r");
+				stdoutput = open(FSYSTEM, outname,"w");
 			}
 			if (stdoutput == SYSERR) {
 				fprintf(dev, SHELL_OUTERRMSG, outname);
