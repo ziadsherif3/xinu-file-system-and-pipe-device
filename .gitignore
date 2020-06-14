@@ -1,3 +1,4 @@
 config/
 compile/
 .DS_Store
+.vscode
