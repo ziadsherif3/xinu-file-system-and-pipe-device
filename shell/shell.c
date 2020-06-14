@@ -278,7 +278,8 @@ process	shell (
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
 			} else {
-				
+				//control(stdoutput, F_CTL_TRUNC, 0, 0);
+				//write
 			}
 		}
 
