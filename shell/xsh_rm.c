@@ -14,7 +14,7 @@ shellcmd xsh_rm(int nargs, char *args[]) {
 		return SYSERR;
     }
 
-    if ( (control(FSYSTEM, FDELETE,args[1],0)) == SYSERR) {
+    if ( (control(FSYSTEM, FDELETE,(int32) args[1],0)) == SYSERR) {
       return SYSERR;
     }
     return 0;
