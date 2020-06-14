@@ -48,6 +48,7 @@ devcall	lmfopen (
 
     while (*chp != NULLCH) {
         if (*chp == '/'){ /* 2 or more forward slashes were found following each other */
+
             return SYSERR;
         }
         for (i = 0; i < NAME_LEN; i++) {
@@ -208,7 +209,6 @@ devcall	lmfopen (
             signal(fsystem.lmf_mutex1);
         }
         signal(fsystem.lftabmutex);
-        
         return SYSERR;
     }
 

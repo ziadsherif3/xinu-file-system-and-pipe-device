@@ -58,6 +58,23 @@ process	shell (
 		did32	dev		/* ID of tty device from which	*/
 	)				/*   to accept commands		*/
 {
+
+	// char  biff[3] = "hi\0";
+	// char  bdff[6] = "rd0:/s\0";
+	// printf("%s\n",bdff);
+	// printf("%s\n",biff);
+	// char out[3];
+	// did32 f;
+	// printf("Control output: %d\n",control(FSYSTEM, FCREATE, (int32) bdff, 0));
+	// f = open(FSYSTEM, bdff, "w");
+	// printf("write output: %d\n",write(f,biff, 3));
+	// close(f);
+	// f = open(FSYSTEM, bdff, "r");
+	// printf("read output: %d\n",read(f,out,3));
+	// close(f);
+	// printf("%s\n\n\n\n\n\n\n", out);
+
+
 	char	buf[SHELL_BUFLEN];	/* Input line (large enough for	*/
 					/*   one line from a tty device	*/
 	int32	len;			/* Length of line read		*/
@@ -270,6 +287,7 @@ process	shell (
 			}
 		}
 		if (outname != NULL) {
+			//printf("outname: %s", outname);
 			if ( (stdoutput = open(FSYSTEM, outname,"w")) == SYSERR) {
 				control(FSYSTEM, FCREATE,(int32) outname,0);
 				stdoutput = open(FSYSTEM, outname,"w");
@@ -278,8 +296,6 @@ process	shell (
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
 			} else {
-				//control(stdoutput, F_CTL_TRUNC, 0, 0);
-				//write
 			}
 		}
 

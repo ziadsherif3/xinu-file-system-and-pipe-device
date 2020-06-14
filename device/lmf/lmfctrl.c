@@ -24,7 +24,7 @@ devcall	lmfctrl (
 {
 	char *name = (char *)arg1;
 	int32 retval;
-
+    //kprintf("ARG name %s\n", name);
 	if (func == FCREATE) {
 		retval = fcreate(name);
 	}
