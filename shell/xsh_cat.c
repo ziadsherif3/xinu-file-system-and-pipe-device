@@ -19,7 +19,7 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 	uint64 numRead;	/* Number of Bytes read */
 	uint64 i;
 
-	if ( (fileDev = open(FSYSTEM, args[1], "r") )  == SYSERR) { /*Cannot open file */
+	if ( ((fileDev = open(FSYSTEM, args[1], "r") )  == SYSERR) || (fileDev == NOTFOUND)) { /*Cannot open file */
 		return SYSERR;
 	}
 

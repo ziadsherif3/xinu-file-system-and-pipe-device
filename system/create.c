@@ -55,6 +55,13 @@ pid32	create(
 	prptr->prdesc[1] = CONSOLE;
 	prptr->prdesc[2] = CONSOLE;
 
+	/* Set up file descriptors as empty */
+	prptr->nfprdesc = 0;
+
+	for (i = 5; i < NDESC; i++) {
+		prptr->prdesc[i] = -1;
+	}
+
 	/* Initialize stack as if the process was called		*/
 
 	*saddr = STACKMAGIC;

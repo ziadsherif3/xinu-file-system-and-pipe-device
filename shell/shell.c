@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "shprototypes.h"
 
+struct inode cwd;
+
 /************************************************************************/
 /* Table of Xinu shell commands and the function associated with each	*/
 /************************************************************************/
@@ -279,23 +281,26 @@ process	shell (
 		}
 
 		/* Open files and redirect I/O if specified */
+
 		if (inname != NULL) {
-			stdinput = open(FSYSTEM,inname,"r");
-			if (stdinput == SYSERR) {
-				fprintf(dev, SHELL_INERRMSG, inname);
-				continue;
-			}
+			fprintf(dev, SHELL_INERRMSG, inname);
+			continue;
 		}
 		if (outname != NULL) {
 			//printf("outname: %s", outname);
-			if ( (stdoutput = open(FSYSTEM, outname,"w")) == SYSERR) {
-				control(FSYSTEM, FCREATE,(int32) outname,0);
-				stdoutput = open(FSYSTEM, outname,"w");
+			if ((stdoutput = open(FSYSTEM, outname, "w")) == NOTFOUND) { /* File not found */
+				control(FSYSTEM, FCREATE, (int32)outname, 0);
+				stdoutput = open(FSYSTEM, outname, "w");
+				proctab[currpid].nfprdesc--;
+				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
 			}
-			if (stdoutput == SYSERR) {
+			else if (stdoutput == SYSERR) {
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
-			} else {
+			}
+			else { /* Mark the file as closed because the child will close it as its stdoutput */
+				proctab[currpid].nfprdesc--;
+				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
 			}
 		}
 

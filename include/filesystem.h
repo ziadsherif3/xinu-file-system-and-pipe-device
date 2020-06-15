@@ -27,6 +27,8 @@
 
 #define MAXFILESIZE 1048576     /* 10 * 512 + 128 * 512 + 128 * 14.9 * 512 */
 
+#define NOTFOUND -2             /* Not found custom error */
+
 /* Structure for the tuple used in directory i-node */
 
 struct tuple {
@@ -101,6 +103,7 @@ struct lfdbfree {
 
 extern struct lfcblk lftab[];
 extern struct lmf fsystem;
+extern struct inode cwd;
 
 /* Helper functions declerations */
 

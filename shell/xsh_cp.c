@@ -21,7 +21,7 @@ shellcmd xsh_cp(int nargs, char *args[]) {
     uint64 count;    /*Characters written to destination */
     char buffer[MAXFILESIZE]; /*buffer to transfer */
 
-    if ((src = open(FSYSTEM, args[1], "r")) == SYSERR) { /* Source file is not found or in use */
+    if (((src = open(FSYSTEM, args[1], "r")) == SYSERR) || (src == NOTFOUND)) { /* Source file is not found or in use */
         fprintf(stderr, "Cannot open source file\n");
         return SYSERR;
     }
@@ -33,7 +33,7 @@ shellcmd xsh_cp(int nargs, char *args[]) {
         return SYSERR;
     }
 
-    if ((dest = open(FSYSTEM, args[2], "w")) == SYSERR) { /* Destination File is not found or in use */
+    if (((dest = open(FSYSTEM, args[2], "w")) == SYSERR)) { /* Destination File is not found or in use */
         if ((control(FSYSTEM, FCREATE, (int32) args[2], 0)) == SYSERR) { /* Destination File is in use */
             fprintf(stderr, "Cannot open destination file\n");
             return SYSERR;

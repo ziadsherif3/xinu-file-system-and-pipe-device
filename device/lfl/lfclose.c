@@ -16,6 +16,11 @@ devcall	lfclose (
 	lfptr = &lftab[devptr->dvminor];
 	wait(fsystem.lftabmutex);
 
+	if ((lfptr->lfstate) == FREE) {
+		signal(fsystem.lftabmutex);
+		return SYSERR;
+	}
+
 	if (lfptr->lfram == RAMDISK0) {
 		wait(fsystem.lmf_mutex0);
 	}
@@ -46,6 +51,15 @@ devcall	lfclose (
 	}
 
 	memset((char *)&lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+
+	for (i = 5; i < NDESC; i++) {
+		if (proctab[currpid].prdesc[i] == lfptr->lfdev) {
+			break;
+		}
+	}
+
+	proctab[currpid].prdesc[i] = -1;
+	proctab[currpid].nfprdesc--;
 
 	if (lfptr->lfram == RAMDISK0) {
 		signal(fsystem.lmf_mutex0);

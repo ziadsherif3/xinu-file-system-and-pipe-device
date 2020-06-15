@@ -29,6 +29,14 @@ syscall	kill(
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}
+	/* Close opened files if any */
+
+	for (i=5; i<NDESC; i++) {
+		if (prptr->prdesc[i] != -1){
+			close(prptr->prdesc[i]);
+		}
+	}
+
 	freestk(prptr->prstkbase, prptr->prstklen);
 
 	switch (prptr->prstate) {
