@@ -24,10 +24,12 @@ shellcmd xsh_mv(int nargs, char *args[]) {
         fprintf(stderr, "Cannot open source file\n");
         return SYSERR;
     }
+
     numRead = read(src, buffer, MAXFILESIZE);
     close(src);
-	if ((control(FSYSTEM, FDELETE, (int32) args[0], 0)) == SYSERR) {
-		fprintf(stderr, "Error occured\n");
+
+	if ((control(FSYSTEM, FDELETE, (int32) args[1], 0)) == SYSERR) {
+		fprintf(stderr, "%s Error occured in Deletion\n");
         return SYSERR;
 	}
 
