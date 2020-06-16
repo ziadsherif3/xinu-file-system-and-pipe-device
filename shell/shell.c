@@ -119,6 +119,9 @@ process	shell (
 
 	while (TRUE) {
 
+		/* Close Redirection Files */
+		
+
 		/* Display prompt */
 
 		fprintf(dev, SHELL_PROMPT);

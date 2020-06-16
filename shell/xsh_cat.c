@@ -20,6 +20,7 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 	uint64 i;
 
 	if ( (fileDev = open(FSYSTEM, args[1], "r") )  == SYSERR) { /*Cannot open file */
+		fprintf(stderr, "Cannot open source file\n");
 		return SYSERR;
 	}
 

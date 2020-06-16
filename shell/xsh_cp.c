@@ -21,10 +21,11 @@ shellcmd xsh_cp(int nargs, char *args[]) {
     uint64 count;    /*Characters written to destination */
     char buffer[MAXFILESIZE]; /*buffer to transfer */
 
-    if ((src = open(FSYSTEM, args[1], "r")) == SYSERR) { /* Source file is not found or in use */
-        fprintf(stderr, "Cannot open source file\n");
+    if ( ( src = open(FSYSTEM, args[1], "r") ) == SYSERR) { /* Source file is not found or in use */
+        fprintf(stderr, "%s:Cannot open source file %s\n",args[0], args[1]);
         return SYSERR;
     }
+
     numRead = read(src, buffer, MAXFILESIZE);
     close(src);
 

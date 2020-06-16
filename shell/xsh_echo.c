@@ -18,6 +18,6 @@ shellcmd xsh_echo(int nargs, char *args[])
 		}
 	}
 	printf("\n");
-
+	
 	return 0;
 }
