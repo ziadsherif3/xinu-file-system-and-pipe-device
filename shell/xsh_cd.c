@@ -33,7 +33,5 @@ shellcmd xsh_cd(int nargs, char *args[]) {
         return SYSERR;
     }
 
-    cwd = (struct inode *)retval;
-
     return 0;
 }
