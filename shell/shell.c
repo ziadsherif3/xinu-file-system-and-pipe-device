@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "shprototypes.h"
 
-struct inode cwd;
+struct inode *cwd = &fsystem.rt0;
 
 /************************************************************************/
 /* Table of Xinu shell commands and the function associated with each	*/
@@ -32,7 +32,7 @@ const	struct	cmdent	cmdtab[] = {
 	{"mv", 		TRUE,	xsh_mv},
 	{"rm", 		TRUE,	xsh_rm},
 	{"cp", 		TRUE,	xsh_cp},
-	{"pwd",		TRUE,	xsh_pwd},
+	{"pwd",		FALSE,	xsh_pwd},
 	{"cd", 		TRUE,	xsh_cd}
 
 };

@@ -36,19 +36,16 @@ devcall	lmfopen (
 
     if ((retval1 != 0) && (retval2 != 0)) {
         return SYSERR;
-        
     }
 
     chp = name + 5;
     
     if ((name[strlen(name) - 1] == '/') || (*chp == '/')){
-        
         return SYSERR;
     }
 
     while (*chp != NULLCH) {
-        if (*chp == '/'){ /* 2 or more forward slashes were found following each other */
-
+        if (*chp == '/') { /* 2 or more forward slashes were found following each other */
             return SYSERR;
         }
         for (i = 0; i < NAME_LEN; i++) {
@@ -241,7 +238,7 @@ devcall	lmfopen (
     /* Update the i-node on disk */
 
     pnode2->sdev = lfptr->lfdev;
-    pnode2->filestat.acctime = clktime;
+    pnode2->filestat.acctime = pnode2->filestat.mtime = clktime;
     retval = write(disk, (char *)pnode2, pnode2->filestat.ino);
 
     if (retval == SYSERR) {

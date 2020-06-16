@@ -24,10 +24,11 @@
 #define FDELETE     1           /* File delete */
 #define FMKDIR      2           /* directory create */
 #define FRMDIR      3           /* directory delete */
+#define DIROPEN     4           /* Open directory */
 
 #define MAXFILESIZE 1048576     /* 10 * 512 + 128 * 512 + 128 * 14.9 * 512 */
 
-#define NOTFOUND -2             /* Not found custom error */
+#define NOTFOUND (-2)             /* Not found custom error */
 
 /* Structure for the tuple used in directory i-node */
 
@@ -103,7 +104,7 @@ struct lfdbfree {
 
 extern struct lfcblk lftab[];
 extern struct lmf fsystem;
-extern struct inode cwd;
+extern struct inode *cwd;
 
 /* Helper functions declerations */
 
@@ -112,3 +113,4 @@ status dbfree(did32, dbid32);
 status fstat(char *, struct stat *);
 status lfflush (struct lfcblk *);
 status lfsetup (struct lfcblk *, int32);
+status opendir(char *);
