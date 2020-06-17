@@ -31,8 +31,6 @@ devcall	lmfinit (
 
 	memset((char *)&fsystem.rt0, NULLCH, sizeof(struct inode));
 	memset((char *)&fsystem.rt1, NULLCH, sizeof(struct inode));
-	fsystem.rt0present = FALSE;
-	fsystem.rt1present = FALSE;
 	fsystem.r0freepos = fsystem.r1freepos = 1;		/* Indicate the block number of the first disk block in free list of both disks */
 
 	fsystem.r0freenum = fsystem.r1freenum = RM_BLKS - 1;
@@ -41,6 +39,11 @@ devcall	lmfinit (
 	if(retval == SYSERR){
 		return SYSERR;
 	}
+
+	read(RAMDISK0, (char *)&fsystem.rt0, 0);
+	read(RAMDISK1, (char *)&fsystem.rt1, 0);
+	fsystem.rt0present = TRUE;
+	fsystem.rt1present = TRUE;
 
 	return OK;
 }
