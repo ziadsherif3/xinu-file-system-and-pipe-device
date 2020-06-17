@@ -15,7 +15,7 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 		return SYSERR;
 	}
 	did32 fileDev;	/* File device descriptor */
-	char  readBuff[100];	/* buffer to hold read characters */
+	char  readBuff[MAXFILESIZE];	/* buffer to hold read characters */
 	uint64 numRead;	/* Number of Bytes read */
 	uint64 i;
 

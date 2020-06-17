@@ -14,7 +14,7 @@ shellcmd xsh_touch(int nargs, char *args[]) {
 		fprintf(stderr, "Usage: touch \"filePath\"\n");
 		return SYSERR;
 	}
-    char  fname[30];
+    char  fname[50];
 
     strcpy(fname, args[1]);
 
@@ -23,12 +23,12 @@ shellcmd xsh_touch(int nargs, char *args[]) {
     if (retval == SYSERR) {
         retval = control(FSYSTEM, FCREATE, (int32)fname, 0);
         if (retval == SYSERR) {
-            fprintf(stderr, "Error occured 1\n");
+            fprintf(stderr, "File is in use\n");
             return SYSERR;
         }
     }
     else if (retval == SYSERR){
-        fprintf(stderr, "Error occured2\n");
+        fprintf(stderr, "Error occured\n");
         return SYSERR;
     }
     else {

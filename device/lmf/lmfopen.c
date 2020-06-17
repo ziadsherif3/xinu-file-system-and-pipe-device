@@ -210,6 +210,17 @@ devcall	lmfopen (
         return SYSERR;
     }
 
+    if (proctab[currpid].nfprdesc >= 16) { /* Process can't open more than 16 files */
+         if (retval1 == 0) {
+             signal(fsystem.lmf_mutex0);
+         }
+        else {
+            signal(fsystem.lmf_mutex1);
+        }
+        signal(fsystem.lftabmutex);
+        return SYSERR;
+    }
+
     /* Initialize the local file pseudo-device */
 
     lfptr = &lftab[lfnext];
@@ -241,6 +252,16 @@ devcall	lmfopen (
         signal(fsystem.lftabmutex);
         return SYSERR;
 	}
+
+    for (i = 5; i < NDESC; i++) { /* Find first free location for files in prdesc */
+        if (proctab[currpid].prdesc[i] == -1) {
+            break;
+        }
+    }
+    proctab[currpid].pprdesc = i;
+    proctab[currpid].prdesc[i] = lfptr->lfdev;
+    proctab[currpid].nfprdesc++;
+
 
     if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);

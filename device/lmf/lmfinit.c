@@ -45,7 +45,7 @@ devcall	lmfinit (
 	read(RAMDISK1, (char *)&fsystem.rt1, 0);
 	fsystem.rt0present = TRUE;
 	fsystem.rt1present = TRUE;
-	cwd = &fsystem.rt1;
+	cwd = &fsystem.rt0;
 	return OK;
 }
 
