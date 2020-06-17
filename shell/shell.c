@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "shprototypes.h"
 
-struct inode *cwd = &fsystem.rt1;
+
 
 
 /************************************************************************/

@@ -4,6 +4,7 @@
 #include <ramdisk.h>
 
 struct lmf fsystem;
+struct inode *cwd;
 local	status	lmfcreate(void);
 
 /*------------------------------------------------------------------------
@@ -44,7 +45,7 @@ devcall	lmfinit (
 	read(RAMDISK1, (char *)&fsystem.rt1, 0);
 	fsystem.rt0present = TRUE;
 	fsystem.rt1present = TRUE;
-
+	cwd = &fsystem.rt1;
 	return OK;
 }
 

@@ -905,10 +905,13 @@ local	status	dirdelete(char *name)
  */
 local   status  truncate(struct inode *pnode, did32 disk)
 {
+
     int32 i;                                    /* General loop index */
     int32 j;                                    /* General loop index */
     int32 sblock[RM_BLKSIZ / sizeof(int32)];    /* Single indirect block buffer */
     int32 dblock[RM_BLKSIZ / sizeof(int32)];    /* Double indirect block buffer */
+
+    
 
     for (i = 0; i < ((sizeof(pnode->datablcks) / sizeof(int32)) - 2); i++) {
         if (pnode->datablcks[i] == LF_DNULL) {
@@ -989,6 +992,11 @@ local   status  dircheck(struct inode *pnode, did32 disk)
     int32 retval;               /* Value returned from function */
 
     pnode1 = &node1;
+    
+    if (pnode->filestat.size != 0 ) {
+        kprintf("Henaa\n");
+        return SYSERR;
+    }
 
     for (i = 0; i < pnode->filestat.size; i++) {
         retval = read(disk, (char *)pnode1, pnode->contents[i].blcknum);

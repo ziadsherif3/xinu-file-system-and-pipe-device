@@ -15,6 +15,7 @@ shellcmd xsh_rm(int nargs, char *args[]) {
     }
 
     if ( (control(FSYSTEM, FDELETE,(int32) args[1],0)) == SYSERR) {
+      printf("Error Occured\n");
       return SYSERR;
     }
     return 0;

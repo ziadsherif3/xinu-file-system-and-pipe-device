@@ -13,7 +13,7 @@ shellcmd xsh_ls(int nargs, char *args[]) {
 		fprintf(stderr, "Usage: ls\n");
 		return SYSERR;
 	}
-
+	
 
 	if (cwd->filestat.size == 0) {
 		return 0;
@@ -24,15 +24,7 @@ shellcmd xsh_ls(int nargs, char *args[]) {
 	for (i = 0; i < (cwd->filestat.size); i++) {
 		printf("%s\n", cwd->contents[i].name);
 	}
-	cwd = &fsystem.rt0;
-		if (cwd->filestat.size == 0) {
-		return 0;
-	}
 
-	for (i = 0; i < (cwd->filestat.size); i++) {
-		printf("%s\n", cwd->contents[i].name);
-	}
-	cwd = &fsystem.rt1;
     return 0;
     
 }

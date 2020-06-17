@@ -29,7 +29,7 @@ shellcmd xsh_rmdir(int nargs, char *args[]) {
 	int32 retval = control(FSYSTEM, FRMDIR, (int32)name, 0);
 	
 	if (retval == SYSERR) {
-		fprintf(stderr, "Error occured\n");
+		fprintf(stderr, "Error occured, Please make sure the directory is empty\n");
         return SYSERR;
 	}
 

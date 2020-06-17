@@ -19,8 +19,8 @@ shellcmd xsh_mv(int nargs, char *args[]) {
     uint64 numRead; /* Characters read from source */
     uint64 count;    /*Characters written to destination */
     char buffer[MAXFILESIZE]; /*buffer to transfer */
-    char srcName[12];
-    char destName[12];
+    char srcName[30];
+    char destName[30];
 
     strcpy(srcName,args[1]);
     strcpy(destName, args[2]);

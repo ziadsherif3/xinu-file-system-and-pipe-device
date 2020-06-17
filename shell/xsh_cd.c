@@ -27,5 +27,6 @@ shellcmd xsh_cd(int nargs, char *args[]) {
         fprintf(stderr, "Error occured\n");
         return SYSERR;
     }
+    return 0;
 
 }
