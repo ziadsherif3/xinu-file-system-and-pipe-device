@@ -29,7 +29,7 @@ syscall	kill(
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}
-
+	
 	/* Close opened files if any */
 
  	for (i=5; i<NDESC; i++) {
@@ -37,13 +37,14 @@ syscall	kill(
  			close(prptr->prdesc[i]);
  		}
  	}
-
+	
 	freestk(prptr->prstkbase, prptr->prstklen);
-
+	
 	switch (prptr->prstate) {
 	case PR_CURR:
 		prptr->prstate = PR_FREE;	/* Suicide */
 		resched();
+		
 
 	case PR_SLEEP:
 	case PR_RECTIM:
@@ -62,7 +63,8 @@ syscall	kill(
 	default:
 		prptr->prstate = PR_FREE;
 	}
-
+	
 	restore(mask);
+	
 	return OK;
 }

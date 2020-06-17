@@ -28,12 +28,12 @@ shellcmd xsh_touch(int nargs, char *args[]) {
     if ( (fileDesc = open(FSYSTEM, fname, "w")) == SYSERR) {
         
         if ( (fileDesc = control(FSYSTEM, FCREATE, (int32)fname, 0)) == SYSERR) {
-            fprintf(stderr, "File is in use\n");
+            fprintf(stderr, "An Error occured, Recheck the arguments\n");
             return SYSERR;
         }
          if ( (fileDesc = open(FSYSTEM, fname, "w")) == SYSERR) {
             fprintf(stderr, "An Error occured, please mak sure the directory exists\n");
-            fprintf(stderr, "Aborting...")
+            fprintf(stderr, "Aborting...");
             return SYSERR;
         }
     }

@@ -26,7 +26,6 @@ shellcmd xsh_ps(int nargs, char *args[])
 		printf("\t--help\t display this help and exit\n");
 		return 0;
 	}
-
 	/* Check for valid number of arguments */
 
 	if (nargs > 1) {
@@ -37,15 +36,15 @@ shellcmd xsh_ps(int nargs, char *args[])
 	}
 
 	/* Print header for items from the process table */
-
+	
 	printf("%3s %-16s %5s %4s %4s %10s %-10s %10s\n",
 		   "Pid", "Name", "State", "Prio", "Ppid", "Stack Base",
 		   "Stack Ptr", "Stack Size");
+		
 
 	printf("%3s %-16s %5s %4s %4s %10s %-10s %10s\n",
 		   "---", "----------------", "-----", "----", "----",
 		   "----------", "----------", "----------");
-
 	/* Output information for each process */
 
 	for (i = 0; i < NPROC; i++) {
