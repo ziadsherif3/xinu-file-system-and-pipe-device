@@ -19,11 +19,13 @@ shellcmd xsh_mv(int nargs, char *args[]) {
     uint64 numRead; /* Characters read from source */
     uint64 count;    /*Characters written to destination */
     char buffer[MAXFILESIZE]; /*buffer to transfer */
-    char srcName[30];
-    char destName[30];
+    char *srcName;
+    char *destName;
 
-    strcpy(srcName,args[1]);
-    strcpy(destName, args[2]);
+    srcName = getmem(NAME_LEN + strlen(args[1]) + 1);
+    destName = getmem(NAME_LEN + strlen(args[2]) + 1);
+    strncpy(srcName,args[1], strlen(args[1]) + 1);
+    strncpy(destName, args[2], strlen(args[2]) + 1);
 
     if ((src = open(FSYSTEM, srcName, "r")) == SYSERR) { /* Source file is not found or in use */
         fprintf(stderr, "Cannot open source file\n");

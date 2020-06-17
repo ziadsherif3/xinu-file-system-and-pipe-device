@@ -23,7 +23,7 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 		fprintf(stderr, "Cannot open source file\n");
 		return SYSERR;
 	}
-
+	
 	/* Read the file */
 	numRead = read(fileDev, readBuff, MAXFILESIZE);
 	for (i = 0; i < numRead; i++) {
