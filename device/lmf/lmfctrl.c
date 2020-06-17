@@ -993,10 +993,7 @@ local   status  dircheck(struct inode *pnode, did32 disk)
 
     pnode1 = &node1;
     
-    if (pnode->filestat.size != 0 ) {
-        kprintf("Henaa\n");
-        return SYSERR;
-    }
+
 
     for (i = 0; i < pnode->filestat.size; i++) {
         retval = read(disk, (char *)pnode1, pnode->contents[i].blcknum);
