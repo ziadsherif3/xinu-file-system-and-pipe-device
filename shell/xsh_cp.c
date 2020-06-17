@@ -39,10 +39,7 @@ shellcmd xsh_cp(int nargs, char *args[]) {
             }
         }
         strncpy(holder, srcName + i+1, strlen(args[1]) - i );
-        printf("%c", srcName[i+1]);
-        printf("holder %s\n", holder);
         strncat(destName, holder, strlen(holder) + 1);
-        printf("dest %s\n", destName);
     }
 
     if ( ( src = open(FSYSTEM, srcName, "r") ) == SYSERR) { /* Source file is not found or in use */
