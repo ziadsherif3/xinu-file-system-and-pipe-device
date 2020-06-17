@@ -17,6 +17,7 @@
 #define NAME_LEN 12             /* Length of file/directory name */
 #define ntuples 25              /* Number of tuples */
 #define LF_DNULL (dbid32) -1    /* Data block null pointer */
+#define NOTFOUND (-2)
 #define rmode   0               /* Read mode for a file */
 #define wmode   1               /* write mode for a file */
 
@@ -24,7 +25,7 @@
 #define FDELETE     1           /* File delete */
 #define FMKDIR      2           /* directory create */
 #define FRMDIR      3           /* directory delete */
-
+#define DIROPEN     4           /* Open directory */
 #define MAXFILESIZE 1048576     /* 10 * 512 + 128 * 512 + 128 * 14.9 * 512 */
 
 /* Structure for the tuple used in directory i-node */
@@ -109,3 +110,4 @@ status dbfree(did32, dbid32);
 status fstat(char *, struct stat *);
 status lfflush (struct lfcblk *);
 status lfsetup (struct lfcblk *, int32);
+status opendir(char *);

@@ -37,6 +37,9 @@ devcall	lmfctrl (
 	else if (func == FRMDIR) {
 		retval = dirdelete(name);
 	}
+    else if (func == DIROPEN) {
+        retval = opendir(name);
+    }
 	else {
 		return SYSERR;
 	}
