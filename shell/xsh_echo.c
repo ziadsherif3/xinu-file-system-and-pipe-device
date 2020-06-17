@@ -7,6 +7,7 @@
  * xhs_echo - write argument strings to stdout
  *------------------------------------------------------------------------
  */
+
 shellcmd xsh_echo(int nargs, char *args[])
 {
 	int32	i;			/* walks through args array	*/

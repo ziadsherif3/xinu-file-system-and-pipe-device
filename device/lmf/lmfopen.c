@@ -42,13 +42,11 @@ devcall	lmfopen (
     chp = name + 5;
     
     if ((name[strlen(name) - 1] == '/') || (*chp == '/')){
-        
         return SYSERR;
     }
 
     while (*chp != NULLCH) {
-        if (*chp == '/'){ /* 2 or more forward slashes were found following each other */
-
+        if (*chp == '/') { /* 2 or more forward slashes were found following each other */
             return SYSERR;
         }
         for (i = 0; i < NAME_LEN; i++) {

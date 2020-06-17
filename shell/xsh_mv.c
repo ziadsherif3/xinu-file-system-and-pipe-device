@@ -19,8 +19,13 @@ shellcmd xsh_mv(int nargs, char *args[]) {
     uint64 numRead; /* Characters read from source */
     uint64 count;    /*Characters written to destination */
     char buffer[MAXFILESIZE]; /*buffer to transfer */
+    char srcName[12];
+    char destName[12];
 
-    if ((src = open(FSYSTEM, args[1], "r")) == SYSERR) { /* Source file is not found or in use */
+    strcpy(srcName,args[1]);
+    strcpy(destName, args[2]);
+
+    if ((src = open(FSYSTEM, srcName, "r")) == SYSERR) { /* Source file is not found or in use */
         fprintf(stderr, "Cannot open source file\n");
         return SYSERR;
     }
@@ -28,7 +33,7 @@ shellcmd xsh_mv(int nargs, char *args[]) {
     numRead = read(src, buffer, MAXFILESIZE);
     close(src);
 
-	if ((control(FSYSTEM, FDELETE, (int32) args[1], 0)) == SYSERR) {
+	if ((control(FSYSTEM, FDELETE, (int32) srcName, 0)) == SYSERR) {
 		fprintf(stderr, "%s Error occured in Deletion\n");
         return SYSERR;
 	}
@@ -38,13 +43,13 @@ shellcmd xsh_mv(int nargs, char *args[]) {
         return SYSERR;
     }
 
-    if ((dest = open(FSYSTEM, args[2], "w")) == SYSERR) { /* Destination File is not found or in use */
-        if ((control(FSYSTEM, FCREATE, (int32) args[2], 0)) == SYSERR) { /* Destination File is in use */
+    if ((dest = open(FSYSTEM, destName, "w")) == SYSERR) { /* Destination File is not found or in use */
+        if ((control(FSYSTEM, FCREATE, (int32) destName, 0)) == SYSERR) { /* Destination File is in use */
             fprintf(stderr, "Cannot open destination file\n");
             return SYSERR;
         }
         else { /* Destination File was just Created by cp */
-            if ((dest = open(FSYSTEM, args[2], "w")) == SYSERR) {
+            if ((dest = open(FSYSTEM, destName, "w")) == SYSERR) {
                 fprintf(stderr, "Error occured, aborting\n");
                 return SYSERR;
             }
@@ -58,6 +63,6 @@ shellcmd xsh_mv(int nargs, char *args[]) {
         fprintf(stderr, "Error occured\n");
         return SYSERR;
     }
-    return OK;
+    return 0;
 
 }

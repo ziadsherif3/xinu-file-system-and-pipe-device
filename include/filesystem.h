@@ -98,7 +98,7 @@ struct lfdbfree {
     char padding[RM_BLKSIZ - sizeof(dbid32)];   /* Padding to take the whole disk block */
 };
 
-
+extern struct inode *cwd;
 extern struct lfcblk lftab[];
 extern struct lmf fsystem;
 
