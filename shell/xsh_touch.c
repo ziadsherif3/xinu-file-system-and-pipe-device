@@ -15,22 +15,30 @@ shellcmd xsh_touch(int nargs, char *args[]) {
 		return SYSERR;
 	}
     char  *fname;
+    char buffer[1];
+    
+
+
 
     fname = getmem(NAME_LEN + strlen(args[1]) + 1);
     strncpy(fname, args[1], strlen(args[1]) + 1);
-
-    int32 retval = open(FSYSTEM, fname, "r");
-
-    if (retval == SYSERR) {
-        retval = control(FSYSTEM, FCREATE, (int32)fname, 0);
-        if (retval == SYSERR) {
+    strncpy(buffer, "\0", 1);
+    did32 fileDesc;
+    
+    if ( (fileDesc = open(FSYSTEM, fname, "w")) == SYSERR) {
+        
+        if ( (fileDesc = control(FSYSTEM, FCREATE, (int32)fname, 0)) == SYSERR) {
             fprintf(stderr, "File is in use\n");
             return SYSERR;
         }
+         if ( (fileDesc = open(FSYSTEM, fname, "w")) == SYSERR) {
+            fprintf(stderr, "An Error occured, please mak sure the directory exists\n");
+            fprintf(stderr, "Aborting...")
+            return SYSERR;
+        }
     }
-    else {
-        close(retval);
-    }
+    write(fileDesc, buffer, 1);
+    close(fileDesc);
 
     return 0;
 }

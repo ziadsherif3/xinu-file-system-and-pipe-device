@@ -169,7 +169,7 @@ devcall	opendir (
         else {
             signal(fsystem.lmf_mutex1);
         }
-        return NOTFOUND;
+        return SYSERR;
     }
 
     if (retval1 == 0) {

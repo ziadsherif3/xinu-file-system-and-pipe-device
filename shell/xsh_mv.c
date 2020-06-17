@@ -47,7 +47,7 @@ shellcmd xsh_mv(int nargs, char *args[]) {
 
     if ((dest = open(FSYSTEM, destName, "w")) == SYSERR) { /* Destination File is not found or in use */
         if ((control(FSYSTEM, FCREATE, (int32) destName, 0)) == SYSERR) { /* Destination File is in use */
-            fprintf(stderr, "Cannot open destination file\n");
+            fprintf(stderr, "Cannot open destination file, File in use\n");
             return SYSERR;
         }
         else { /* Destination File was just Created by cp */

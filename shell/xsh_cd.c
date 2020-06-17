@@ -23,7 +23,7 @@ shellcmd xsh_cd(int nargs, char *args[]) {
 
     int32 retval = control(FSYSTEM, DIROPEN, (int32)name, 0);
 
-    if ((retval == SYSERR) || (retval == NOTFOUND)) {
+    if (retval == SYSERR) {
         fprintf(stderr, "Error occured\n");
         return SYSERR;
     }
