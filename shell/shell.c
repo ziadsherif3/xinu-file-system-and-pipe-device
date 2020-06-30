@@ -287,6 +287,8 @@ process	shell (
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
 			} else {
+				proctab[currpid].nfprdesc--;
+				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
 			}
 		}
 

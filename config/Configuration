@@ -66,16 +66,14 @@ lfl:
    /* Define a null device */
    NULLDEV is null on nothing
 
-   /* Define a ram disk device 1 */
+   /* Define a ram disk device 2 */
    RAMDISK2 is ram on mem
-
-   /* Define a ram disk device 1 */
-   RAMDISK1 is ram on mem
 
    /* Define a ram disk device 0 */
    RAMDISK0 is ram on mem
 
-
+   /* Define a ram disk device 1 */
+   RAMDISK1 is ram on mem
 
    /* Define FSYSTEM as an lfs device */
    FSYSTEM is lfs on ram

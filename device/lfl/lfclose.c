@@ -56,11 +56,13 @@ devcall	lfclose (
  		if (proctab[currpid].prdesc[i] == lfptr->lfdev) {
  			break;
  		}
- 	}
+	}
 
- 	proctab[currpid].prdesc[i] = -1;
- 	proctab[currpid].nfprdesc--;
-
+	if (i < NDESC) {
+		proctab[currpid].prdesc[i] = -1;
+		proctab[currpid].nfprdesc--;
+	}
+ 	
 	if (lfptr->lfram == RAMDISK0) {
 		signal(fsystem.lmf_mutex0);
 	}
