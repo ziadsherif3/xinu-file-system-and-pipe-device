@@ -55,6 +55,14 @@ lfl:
 		-r lfread	-g lfgetc	-p lfputc
 		-w lfwrite	-s lfseek	-n ioerr
 		-intr ionull
+
+/* type of pipe device */
+PIPE:
+	on nothing
+		-i pipinit	-o pipopen	-c pipclose
+		-r pipread	-g pipgetc	-p pipputc
+		-w pipwrite	-s ioerr	-n ioerr
+		-intr ionull
 %%
 
 /* Actual device declarations that each give the name of a device that	*/
@@ -125,7 +133,25 @@ lfl:
 
    /* Define pseudo-device file15 as an lfl device */
    file15 is lfl on lfs
-  
+   
+   /* Define pipe0 as a PIPE device */
+   pipe0 is PIPE on nothing
+
+   /* Define pipe1 as a PIPE device */
+   pipe1 is PIPE on nothing
+
+   /* Define pipe2 as a PIPE device */
+   pipe2 is PIPE on nothing
+
+   /* Define pipe3 as a PIPE device */
+   pipe3 is PIPE on nothing
+
+   /* Define pipe4 as a PIPE device */
+   pipe4 is PIPE on nothing
+
+   /* Define pipe5 as a PIPE device */
+   pipe5 is PIPE on nothing
+
 %%
 
 /* Configuration and Size Constants */

@@ -15,14 +15,12 @@ shellcmd xsh_touch(int nargs, char *args[]) {
 		return SYSERR;
 	}
     char  *fname;
-    char buffer[1];
     
 
 
 
     fname = getmem(NAME_LEN + strlen(args[1]) + 1);
     strncpy(fname, args[1], strlen(args[1]) + 1);
-    strncpy(buffer, "\0", 1);
     did32 fileDesc;
     
     if ( (fileDesc = open(FSYSTEM, fname, "w")) == SYSERR) {
@@ -37,7 +35,6 @@ shellcmd xsh_touch(int nargs, char *args[]) {
             return SYSERR;
         }
     }
-    write(fileDesc, buffer, 1);
     close(fileDesc);
 
     return 0;
