@@ -18,6 +18,7 @@ devcall	pipinit (
 	pipeptr->pdev = devptr->dvnum;
 	pipeptr->esembuff = semcreate(0);
 	pipeptr->fsembuff = semcreate(0);
+	pipeptr->pipsem = semcreate(1);
 
     return OK;
 }

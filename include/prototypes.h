@@ -411,14 +411,8 @@ extern	devcall	pipopen(void);
 /* in file pipclose.c */
 extern	devcall	pipclose(struct dentry *);
 
-/* in file pipgetc.c */
-extern	devcall	pipgetc(struct dentry *);
-
-/* in file pipputc.c */
-extern	devcall	pipputc(struct dentry *, char);
-
 /* in file pipread.c */
-extern	devcall	pipread(struct dentry *);
+extern	devcall	pipread(struct dentry *, char *);
 
 /* in file pipwrite.c */
 extern	devcall	pipwrite(struct dentry *, char *, int32);

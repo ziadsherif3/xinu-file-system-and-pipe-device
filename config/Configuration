@@ -60,8 +60,8 @@ lfl:
 PIPE:
 	on nothing
 		-i pipinit	-o pipopen	-c pipclose
-		-r pipread	-g pipgetc	-p pipputc
-		-w pipwrite	-s ioerr	-n ioerr
+		-r pipread	-g ioerr	   -p ioerr
+		-w pipwrite	-s ioerr	   -n ioerr
 		-intr ionull
 %%
 

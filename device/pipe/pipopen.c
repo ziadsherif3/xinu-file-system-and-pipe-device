@@ -28,6 +28,14 @@ devcall	pipopen (void)
     pipeptr->pstate = USED;
     pipeptr->pmode = wmode;
 
+    for (i = 5; i < NDESC; i++) { /* Find first free location for files in prdesc */
+        if (proctab[currpid].prdesc[i] == -1) {
+            break;
+        }
+    }
+    proctab[currpid].pprdesc = i;
+    proctab[currpid].prdesc[i] = pipeptr->pdev;
+
     restore(mask);
     return pipeptr->pdev;
 }

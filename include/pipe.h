@@ -7,6 +7,7 @@
 #endif
 
 #define PIPEBUFFSIZE 256    /* Size of pipe buffer */
+#define pdmode 2            /* Pipe done mode for a pipe before closing */
 
 /* Structure for the pipe control block */
 
@@ -17,6 +18,7 @@ struct pipeblk {
     int32 pbuff[PIPEBUFFSIZE];         /* Pipe buffer */
     sid32 esembuff;                    /* Binary semaphore for empty places used in synchronization */
     sid32 fsembuff;                    /* Binary semaphore for full places used in synchronization */
+    sid32 pipsem;                      /* Global semaphore on pipe */
 };
 
 extern struct pipeblk pipetab[];
