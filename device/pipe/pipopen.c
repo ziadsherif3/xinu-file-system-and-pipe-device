@@ -27,6 +27,8 @@ devcall	pipopen (void)
 
     pipeptr->pstate = USED;
     pipeptr->pmode = wmode;
+    pipeptr->wblocked = FALSE;
+    pipeptr->rdone = FALSE;
 
     for (i = 5; i < NDESC; i++) { /* Find first free location for files in prdesc */
         if (proctab[currpid].prdesc[i] == -1) {

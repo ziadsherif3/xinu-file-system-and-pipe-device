@@ -27,6 +27,8 @@ devcall	pipclose (
 		restore(mask);
 		return SYSERR;
 	}
+
+	proctab[currpid].prdesc[i] = -1;
 	
 	if ((pipeptr->pstate) == FREE) {
 		restore(mask);
@@ -35,20 +37,12 @@ devcall	pipclose (
 	
 	if ((pipeptr->pmode) == wmode) { /* Writer process is done and will admit the reader process */
 		pipeptr->pmode = rmode;
-		signal(pipeptr->fsembuff);
+		if (!pipeptr->rdone) {
+			signal(pipeptr->fsembuff);
+		}
 	}
 	else if ((pipeptr->pmode) == pdmode) { /* Reader process is done and will free up the pipe control block */
 		pipeptr->pstate = FREE;
-	}
-
-	for (i = 5; i < NDESC; i++) {
- 		if (proctab[currpid].prdesc[i] == pipeptr->pdev) {
- 			break;
- 		}
-	}
-
-	if (i < NDESC) {
-		proctab[currpid].prdesc[i] = -1;
 	}
 
 	restore(mask);
