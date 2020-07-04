@@ -402,6 +402,21 @@ extern	devcall	lfseek(struct dentry *, int32);
 /* in file lfwrite.c */
 extern	devcall	lfwrite(struct dentry *, char *, int32);
 
+/* in file pipinit.c */
+extern	devcall	pipinit(struct dentry *);
+
+/* in file pipopen.c */
+extern	devcall	pipopen(void);
+
+/* in file pipclose.c */
+extern	devcall	pipclose(struct dentry *);
+
+/* in file pipread.c */
+extern	devcall	pipread(struct dentry *, char *, int32);
+
+/* in file pipwrite.c */
+extern	devcall	pipwrite(struct dentry *, char *, int32);
+
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
 #define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
