@@ -32,7 +32,7 @@ tty:
 		-w ttywrite     -s ioerr        -n ttycontrol
 		-intr ttydispatch
 
-/* type of ram disk */
+/* type of a ram disk */
 ram:
 	on mem
 		-i raminit	-o ramopen	-c ramclose
@@ -40,7 +40,7 @@ ram:
 		-w ramwrite	-s ioerr	-n ioerr
 		-intr ionull
 
-/* type of filesystem */
+/* type of a filesystem */
 lfs:
 	on ram
 		-i lmfinit	-o lmfopen	-c ioerr
@@ -48,13 +48,23 @@ lfs:
 		-w ioerr	-s ioerr	-n lmfctrl
 		-intr ionull
 
-/* type of file */
+/* type of a file */
 lfl:
 	on lfs
 		-i lfinit	-o ioerr	-c lfclose
 		-r lfread	-g lfgetc	-p lfputc
 		-w lfwrite	-s lfseek	-n ioerr
 		-intr ionull
+
+
+/* type of a pipe device */
+PIPE:
+	on nothing
+		-i pipinit	-o pipopen	-c pipclose
+		-r pipread	-g pipgetc	-p pipputc
+		-w pipwrite	-s ioerr	-n ioerr
+		-intr ionull
+
 %%
 
 /* Actual device declarations that each give the name of a device that	*/
@@ -65,6 +75,9 @@ lfl:
 
    /* Define a null device */
    NULLDEV is null on nothing
+
+   /* Define a ram disk device 2 */
+   RAMDISK2 is ram on mem
 
    /* Define a ram disk device 0 */
    RAMDISK0 is ram on mem
@@ -122,6 +135,24 @@ lfl:
 
    /* Define pseudo-device file15 as an lfl device */
    file15 is lfl on lfs
+
+   /* Define pipe0 as a PIPE device */
+   pipe0 is PIPE on nothing
+
+   /* Define pipe1 as a PIPE device */
+   pipe1 is PIPE on nothing
+
+   /* Define pipe2 as a PIPE device */
+   pipe2 is PIPE on nothing
+
+   /* Define pipe3 as a PIPE device */
+   pipe3 is PIPE on nothing
+
+   /* Define pipe4 as a PIPE device */
+   pipe4 is PIPE on nothing
+
+   /* Define pipe5 as a PIPE device */
+   pipe5 is PIPE on nothing
   
 %%
 
