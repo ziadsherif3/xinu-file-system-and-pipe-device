@@ -1,6 +1,6 @@
 /* filesystem.h */
 
-/* Constants used by the the local file system*/
+/* Constants used by the local file system*/
 
 #ifndef RM_BLKSIZ
 #define	RM_BLKSIZ	512		/* block size */

@@ -34,10 +34,12 @@ devcall	opendir (
     }
 
     if ((retval1 == 0) && (strlen(name) == 5)) {
-        return (devcall)&fsystem.rt0;
+        cwd = &fsystem.rt0;
+        return OK;
     }
     else if ((retval2 == 0) && (strlen(name) == 5)) {
-        return (devcall)&fsystem.rt1;
+        cwd = &fsystem.rt1;
+        return OK;
     }
 
     chp = name + 5;
@@ -177,5 +179,6 @@ devcall	opendir (
         signal(fsystem.lmf_mutex1);
     }
 
-    return (devcall)pnode2;
+    cwd = pnode2;
+    return OK;
 }

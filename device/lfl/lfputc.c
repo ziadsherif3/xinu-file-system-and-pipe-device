@@ -13,8 +13,19 @@ devcall	lfputc (
 {
     struct lfcblk *lfptr;
     int32 retval;
+    int32 j;
 
     lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
 
     /* if the pointer is beyond the current block, setup a new block */
 

@@ -12,8 +12,19 @@ devcall	lfgetc (
 {
 	struct lfcblk *lfptr; /* Ptr to an open file table entry */
 	int32 singleByte; /* Next data byte */
+	int32 j;
 
 	lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
 	
 	/* Return EOF for any attempt to read beyond the EOF */
 	

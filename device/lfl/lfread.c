@@ -15,8 +15,19 @@ devcall	lfread (
     struct lfcblk *lfptr; /* Ptr to an open file table entry */
     uint32 numRead; /* Number of Bytes read */
     int32 nextByte; /* Character or EOF */
+    int32 j;
 
     lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
 
     if (lfptr->lfmode != rmode) {
         return SYSERR;

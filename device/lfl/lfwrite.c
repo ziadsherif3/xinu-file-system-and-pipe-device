@@ -15,8 +15,19 @@ devcall	lfwrite (
     struct lfcblk *lfptr;
     int32 i; /* Number of Bytes written */
     int32 retval;
+    int32 j;
 
     lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
 
     if (lfptr->lfmode != wmode) {
         return SYSERR;

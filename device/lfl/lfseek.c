@@ -12,12 +12,23 @@ devcall	lfseek (
 	)
 {
     struct lfcblk *lfptr; /* pointer to open file table entry */
+    int32 j;
 
     if (offset < 0) {
         return SYSERR;
     }
 
     lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
 
     /* Record offset, and invalidate the byte pointer */
     

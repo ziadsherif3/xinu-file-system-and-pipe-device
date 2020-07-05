@@ -11,9 +11,20 @@ devcall	lfclose (
 	)
 {
 	struct lfcblk *lfptr; /* pointer to the open filetable entry */
-	int32 i;
+	int32 i, j;
 	
 	lfptr = &lftab[devptr->dvminor];
+
+    for (j = 0; j < NDESC; j++) {
+		if (proctab[currpid].prdesc[j] == lfptr->lfdev) {
+ 			break;
+ 		}
+	}
+
+	if (j == NDESC) {
+		return SYSERR;
+	}
+
 	wait(fsystem.lftabmutex);
 
 	if ((lfptr->lfstate) == FREE) {
@@ -52,16 +63,8 @@ devcall	lfclose (
 
 	memset((char *)&lfptr->lfdblock, NULLCH, RM_BLKSIZ);
 
-	for (i = 5; i < NDESC; i++) {
-		if (proctab[currpid].prdesc[i] == lfptr->lfdev) {
-			break;
-		}
-	}
-
-	if (i < NDESC) {
-		proctab[currpid].prdesc[i] = -1;
-		proctab[currpid].nfprdesc--;
-	}
+	proctab[currpid].prdesc[j] = -1;
+	proctab[currpid].nfprdesc--;
 
 	if (lfptr->lfram == RAMDISK0) {
 		signal(fsystem.lmf_mutex0);
