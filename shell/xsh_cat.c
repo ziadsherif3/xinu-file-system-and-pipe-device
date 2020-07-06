@@ -14,10 +14,10 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 		fprintf(stderr, "Usage: cat \"filePath\"\n");
 		return SYSERR;
 	}
+	
 	did32 fileDev;	/* File device descriptor */
 	char  readBuff[MAXFILESIZE];	/* buffer to hold read characters */
 	uint64 numRead;	/* Number of Bytes read */
-	uint64 i;
 	char *srcname = getmem(strlen(args[1]) + 1);
 	strncpy(srcname, args[1], strlen(args[1]) + 1);
 
@@ -29,13 +29,19 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 
 	freemem(srcname, strlen(args[1]) + 1);
 
+	struct dentry *devptr = (struct dentry *) &devtab[fileDev];
+	struct lfcblk *lfptr = &lftab[devptr->dvminor];
+
+	if (lfptr->lfinode->filestat.size == 0) {
+		close(fileDev);
+		return 0;
+	}
+
 	/* Read the file */
 	numRead = read(fileDev, readBuff, MAXFILESIZE);
 	close(fileDev);
 	
-	for (i = 0; i < numRead; i++) {
-		printf("%c", readBuff[i]);
-	}
+	write(proctab[currpid].prdesc[1], readBuff, numRead);
 	
 	return 0;
 }

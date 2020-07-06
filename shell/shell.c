@@ -108,7 +108,6 @@ process	shell (
 					/*   comparison			*/
 	char	*args[SHELL_MAXTOK];	/* Argument vector passed to	*/
 					/*   builtin commands		*/
-	char	*outnamebuff;	/* Buffer to store the outname */
 
 	/* Print shell banner and startup message */
 
@@ -288,14 +287,10 @@ process	shell (
 			continue;
 		}
 		if (outname != NULL) {
-			outnamebuff = getmem(strlen(outname) + 1);
-			strncpy(outnamebuff, outname, strlen(outname) + 1);
-
-			if ((stdoutput = open(FSYSTEM, outnamebuff, "w")) == NOTFOUND) { /* File not found */
-				control(FSYSTEM, FCREATE, (int32)outnamebuff, 0);
-				stdoutput = open(FSYSTEM, outnamebuff, "w");
+			if ((stdoutput = open(FSYSTEM, outname, "w")) == NOTFOUND) { /* File not found */
+				control(FSYSTEM, FCREATE, (int32)outname, 0);
+				stdoutput = open(FSYSTEM, outname, "w");
 				if (stdoutput == SYSERR) {
-					freemem(outnamebuff, strlen(outname) + 1);
 					fprintf(dev, SHELL_OUTERRMSG, outname);
 					continue;
 				}
@@ -303,7 +298,6 @@ process	shell (
 				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
 			}
 			else if (stdoutput == SYSERR) {
-				freemem(outnamebuff, strlen(outname) + 1);
 				fprintf(dev, SHELL_OUTERRMSG, outname);
 				continue;
 			}
@@ -311,8 +305,6 @@ process	shell (
 				proctab[currpid].nfprdesc--;
 				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
 			}
-
-			freemem(outnamebuff, strlen(outname) + 1);
 		}
 
 		/* Spawn child thread for non-built-in commands */

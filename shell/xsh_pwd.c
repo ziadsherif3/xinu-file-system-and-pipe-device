@@ -14,7 +14,8 @@ shellcmd xsh_pwd(int nargs, char *args[]) {
 		return SYSERR;
 	}
 
-    printf("%s\n", cwd->name);
+	write(proctab[currpid].prdesc[1], cwd->name, strlen(cwd->name));
+	write(proctab[currpid].prdesc[1], "\n", 1);
 
 	return 0;
 }

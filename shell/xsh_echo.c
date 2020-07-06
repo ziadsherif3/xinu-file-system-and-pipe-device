@@ -11,13 +11,14 @@ shellcmd xsh_echo(int nargs, char *args[])
 {
 	int32	i;			/* walks through args array	*/
 	if (nargs > 1) {
-		printf("%s", args[1]);
+		write(proctab[currpid].prdesc[1], args[1], strlen(args[1]));
 
 		for (i = 2; i < nargs; i++) {
-			printf(" %s", args[i]);
+			write(proctab[currpid].prdesc[1], args[i], strlen(args[i]));
 		}
 	}
-	printf("\n");
+	
+	write(proctab[currpid].prdesc[1], "\n", 1);
 
 	return 0;
 }

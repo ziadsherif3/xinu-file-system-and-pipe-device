@@ -21,7 +21,8 @@ shellcmd xsh_ls(int nargs, char *args[]) {
 	int32 i;
 
 	for (i = 0; i < (cwd->filestat.size); i++) {
-		printf("%s\n", cwd->contents[i].name);
+		write(proctab[currpid].prdesc[1], cwd->contents[i].name, strlen(cwd->contents[i].name));
+		write(proctab[currpid].prdesc[1], "\n", 1);
 	}
 
     return 0;

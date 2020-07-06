@@ -47,6 +47,9 @@ devcall	lmfctrl (
 	if (retval == SYSERR) {
 		return SYSERR;
 	}
+    else if (retval == NOTFOUND) {
+        return NOTFOUND;
+    }
 
 	return OK;
 }
