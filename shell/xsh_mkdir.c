@@ -27,6 +27,7 @@ shellcmd xsh_mkdir(int nargs, char *args[]) {
     }
 
 	int32 retval = control(FSYSTEM, FMKDIR, (int32)name, 0);
+	freemem(name, strlen(args[1]) + 1);
 	
 	if (retval == SYSERR) {
 		fprintf(stderr, "Error occured\n");

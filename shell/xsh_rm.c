@@ -14,10 +14,16 @@ shellcmd xsh_rm(int nargs, char *args[]) {
 		return SYSERR;
   }
 
-  if ((control(FSYSTEM, FDELETE, (int32)args[1], 0)) == SYSERR) {
+  char *srcname = getmem(strlen(args[1]) + 1);
+	strncpy(srcname, args[1], strlen(args[1]) + 1);
+
+  if ((control(FSYSTEM, FDELETE, (int32)srcname, 0)) == SYSERR) {
     fprintf(stderr, "Error occured\n");
+    freemem(srcname, strlen(args[1]) + 1);
     return SYSERR;
   }
+  
+  freemem(srcname, strlen(args[1]) + 1);
 
   return 0;
 }
