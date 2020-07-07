@@ -47,6 +47,7 @@
 #define	SH_DQUOTE	'"'		/* Double quote character	*/
 #define	SH_LESS		'<'		/* Less-than character	*/
 #define	SH_GREATER	'>'		/* Greater-than character	*/
+#define SH_PIPE		'|'		/* Pipe character */
 
 /* Token types */
 
@@ -56,12 +57,18 @@
 #define	SH_TOK_OTHER	3		/* Token other than those	*/
 					/*   listed above (e.g., an	*/
 					/*   alphanumeric string)	*/
+#define SH_TOK_PIPE		4	/* Pipe token */
 
 /* Shell return constants */
 
 #define	SHELL_OK	 0
 #define	SHELL_ERROR	 1
 #define	SHELL_EXIT	-3
+
+/* Types for the command */
+
+#define SH_COMMNORM		0	/* Normal command type */
+#define SH_COMMPIPE		1	/* Pipe command type */
 
 /* Structure of an entry in the table of shell commands */
 
@@ -73,3 +80,4 @@ struct	cmdent	{			/* Entry in command table	*/
 
 extern	uint32	ncmd;
 extern	const	struct	cmdent	cmdtab[];
+extern	byte	commtype;

@@ -2,6 +2,8 @@
 
 #include <xinu.h>
 
+byte commtype;
+
 /*------------------------------------------------------------------------
  * lexan  -  Ad hoc lexical analyzer to divide command line into tokens
  *------------------------------------------------------------------------
@@ -29,12 +31,15 @@ int32	lexan (
 					/*   input line			*/
 	int32	tbindex;		/* Index into tokbuf		*/
 	char	ch;			/* Next char from input line	*/
+	uint32	npip;		/* Number of pipe tokens found */
 
 	/* Start at the beginning of the line with no tokens */
 
 	ntok = 0;
 	p = line;
 	tbindex = 0;
+	npip = 0;
+	commtype = SH_COMMNORM;
 
 	/* While not yet at end of line, get next token */
 
@@ -43,6 +48,12 @@ int32	lexan (
 		/* If too many tokens, return error */
 
 		if (ntok >= SHELL_MAXTOK) {
+			return SYSERR;
+		}
+
+		/* If too many pipes, return error */
+
+		if (npip > NPIPE) {
 			return SYSERR;
 		}
 
@@ -89,6 +100,15 @@ int32	lexan (
 					ntok++;
 					p++;
 					continue;
+			
+			case SH_PIPE:	toktyp[ntok] = SH_TOK_PIPE;
+					tokbuf[tbindex++] = ch;
+					tokbuf[tbindex++] = NULLCH;
+					ntok++;
+					p++;
+					npip++;
+					commtype = SH_COMMPIPE;
+					continue;
 
 		    default:		toktyp[ntok] = SH_TOK_OTHER;
 		};
@@ -126,7 +146,7 @@ int32	lexan (
 			&& (ch != SH_LESS)  && (ch != SH_GREATER)
 			&& (ch != SH_BLANK) && (ch != SH_TAB)
 			&& (ch != SH_AMPER) && (ch != SH_SQUOTE)
-			&& (ch != SH_DQUOTE) )	{
+			&& (ch != SH_DQUOTE) && (ch != SH_PIPE) )	{
 				tokbuf[tbindex++] = ch;
 				p++;
 		}
@@ -134,7 +154,7 @@ int32	lexan (
 		/* Report error if other token is appended */
 
 		if (       (ch == SH_SQUOTE) || (ch == SH_DQUOTE)
-			|| (ch == SH_LESS)   || (ch == SH_GREATER) ) {
+			|| (ch == SH_LESS)   || (ch == SH_GREATER) || (ch == SH_PIPE) ) {
 			return SYSERR;
 		}
 
