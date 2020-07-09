@@ -35,6 +35,7 @@
 #define SHELL_OUTERRMSG	"Cannot open file %s for output\n"/* Output err	*/
 					/* Builtin cmd error message	*/
 #define SHELL_BGERRMSG	"Cannot redirect I/O or background a builtin\n"
+#define SHELL_BPERRMSG	"Cannot use builtin with pipes\n"
 
 /* Constants used for lexical analysis */
 

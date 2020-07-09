@@ -14,8 +14,10 @@ devcall	pipread (
 {
 	struct pipeblk *pipeptr;    /* Pointer to a pipe control block */
     int32 i;                    /* General loop index */
+	int32 rdcount;				/* Number of bytes read */
 
     pipeptr = &pipetab[devptr->dvminor];
+	rdcount = 0;
 
     for (i = 0; i < NDESC; i++) {
 		if (proctab[currpid].prdesc[i] == pipeptr->pdev) {
@@ -43,24 +45,25 @@ devcall	pipread (
 
 	wait(pipeptr->fsembuff);
 
-	i = 0;
+	i = pipeptr->rpointer;
 
 	while ((pipeptr->pbuff[i] != EOF) && ((count--) > 0)) {
+		*buff++ = (char) (0xff & pipeptr->pbuff[i++]);
+		rdcount++;
 		if (i == PIPEBUFFSIZE) {
 			i = 0;
 			signal(pipeptr->esembuff);
 			wait(pipeptr->fsembuff);
 		}
-		*buff++ = (char) (0xff & pipeptr->pbuff[i++]);
 	}
 
-	pipeptr->rdone = TRUE;
-	
-	if (pipeptr->wblocked) {
-		signal(pipeptr->esembuff);
+	if (pipeptr->pbuff[i] == EOF) {
+		pipeptr->pmode = pdmode;
+		return rdcount;
 	}
 
-	pipeptr->pmode = pdmode;
+	pipeptr->rpointer = i;
+	signal(pipeptr->fsembuff);
 
-    return OK;
+    return rdcount;
 }

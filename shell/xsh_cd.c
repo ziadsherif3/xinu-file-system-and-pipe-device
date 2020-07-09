@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- * xhs_cd - Change the working directory
+ * xsh_cd - Change the working directory
  *------------------------------------------------------------------------
  */
 shellcmd xsh_cd(int nargs, char *args[]) {

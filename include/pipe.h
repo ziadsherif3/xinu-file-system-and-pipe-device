@@ -19,8 +19,8 @@ struct pipeblk {
     sid32 esembuff;                     /* Binary semaphore for empty places used in synchronization */
     sid32 fsembuff;                     /* Binary semaphore for full places used in synchronization */
     sid32 pipsem;                       /* Global semaphore on pipe */
-    byte wblocked;                      /* Flag indicating that the writer process is blocked */
-    byte rdone;                         /* Flag indicating that the buffer of the reader process is full */
+    byte wpointer;                      /* The next position in pipe buffer to be written in before calling close as a writer */
+    byte rpointer;                      /* The next position in pipe buffer to be read from before calling close as a reader */
 };
 
 extern struct pipeblk pipetab[];

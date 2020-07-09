@@ -37,9 +37,7 @@ devcall	pipclose (
 	
 	if ((pipeptr->pmode) == wmode) { /* Writer process is done and will admit the reader process */
 		pipeptr->pmode = rmode;
-		if (!pipeptr->rdone) {
-			signal(pipeptr->fsembuff);
-		}
+		signal(pipeptr->fsembuff);
 	}
 	else if ((pipeptr->pmode) == pdmode) { /* Reader process is done and will free up the pipe control block */
 		pipeptr->pstate = FREE;

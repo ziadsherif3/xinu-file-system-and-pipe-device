@@ -36,35 +36,25 @@ devcall	pipwrite (
 
     signal(pipeptr->pipsem);
 
-    i = 0;
+    i = pipeptr->wpointer;
 
     while ((count--) > 0) {
         if (i == PIPEBUFFSIZE) {
             i = 0;
-            pipeptr->wblocked = TRUE;
             signal(pipeptr->fsembuff);
             wait(pipeptr->esembuff);
-            pipeptr->wblocked = FALSE;
-            if (pipeptr->rdone) {
-                break;
-            }
         }
         pipeptr->pbuff[i++] = *buff++;
     }
 
-    if (pipeptr->rdone) {
-        return OK;
-    }
-
     if (i == PIPEBUFFSIZE) {
         i = 0;
-        pipeptr->wblocked = TRUE;
         signal(pipeptr->fsembuff);
         wait(pipeptr->esembuff);
-        pipeptr->wblocked = FALSE;
     }
 
-    pipeptr->pbuff[i] = EOF;    
+    pipeptr->pbuff[i] = EOF;
+    pipeptr->wpointer = i;
 
     return OK;
 }

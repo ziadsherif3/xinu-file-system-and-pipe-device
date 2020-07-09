@@ -81,3 +81,12 @@ extern shellcmd xsh_pwd (int32, char *[]);
 
 /* in file xsh_cd.c */
 extern shellcmd xsh_cd (int32, char *[]);
+
+/* in file xsh_gen.c */
+extern shellcmd xsh_gen (int32, char *[]);
+
+/* in file xsh_count.c */
+extern shellcmd xsh_count (int32, char *[]);
+
+/* in file xsh_fstat.c */
+extern shellcmd xsh_fstat (int32, char *[]);

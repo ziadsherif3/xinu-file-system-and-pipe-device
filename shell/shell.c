@@ -10,13 +10,13 @@ struct inode *cwd = &fsystem.rt0;
 /* Table of Xinu shell commands and the function associated with each	*/
 /************************************************************************/
 const	struct	cmdent	cmdtab[] = {
-	{"argecho",	TRUE,	xsh_argecho},
-	{"clear",	TRUE,	xsh_clear},
+	{"argecho",	FALSE,	xsh_argecho},
+	{"clear",	FALSE,	xsh_clear},
 	{"devdump",	FALSE,	xsh_devdump},
 	{"echo",	FALSE,	xsh_echo},
 	{"exit",	TRUE,	xsh_exit},
 	{"help",	FALSE,	xsh_help},
-	{"kill",	TRUE,	xsh_kill},
+	{"kill",	FALSE,	xsh_kill},
 	{"memdump",	FALSE,	xsh_memdump},
 	{"memstat",	FALSE,	xsh_memstat},
 	{"ps",		FALSE,	xsh_ps},
@@ -24,16 +24,19 @@ const	struct	cmdent	cmdtab[] = {
 	{"sleep",	FALSE,	xsh_sleep},
 	{"uptime",	FALSE,	xsh_uptime},
 	{"?",		FALSE,	xsh_help},
-	{"mkdir", 	TRUE,	xsh_mkdir},
-	{"rmdir", 	TRUE,	xsh_rmdir},
+	{"mkdir", 	FALSE,	xsh_mkdir},
+	{"rmdir", 	FALSE,	xsh_rmdir},
 	{"ls", 		FALSE,	xsh_ls},
-	{"touch", 	TRUE,	xsh_touch},
+	{"touch", 	FALSE,	xsh_touch},
 	{"cat", 	FALSE,	xsh_cat},
-	{"mv", 		TRUE,	xsh_mv},
-	{"rm", 		TRUE,	xsh_rm},
-	{"cp", 		TRUE,	xsh_cp},
+	{"mv", 		FALSE,	xsh_mv},
+	{"rm", 		FALSE,	xsh_rm},
+	{"cp", 		FALSE,	xsh_cp},
 	{"pwd",		FALSE,	xsh_pwd},
-	{"cd", 		TRUE,	xsh_cd}
+	{"cd", 		FALSE,	xsh_cd},
+	{"gen", 	FALSE,	xsh_gen},
+	{"count", 	FALSE,	xsh_count},
+	{"fstat", 	FALSE,	xsh_fstat}
 
 };
 
@@ -80,6 +83,8 @@ process	shell (
 					/*   input and output		*/
 	int32	i;			/* Index into array of tokens	*/
 	int32	j;			/* Index into array of commands	*/
+	int32	z;			/* Temporary variable */
+	int32	p;			/* Index into array of pipIDs */
 	int32	msg;			/* Message from receive() for	*/
 					/*   child termination		*/
 	int32	tmparg;			/* Address of this var is used	*/
@@ -91,6 +96,9 @@ process	shell (
 					/*   comparison			*/
 	char	*args[SHELL_MAXTOK];	/* Argument vector passed to	*/
 					/*   builtin commands		*/
+	did32	pipIDs[NPIPE];		/* Array for opened pipe devices IDs */
+	int32	npip;			/* Number of pipes in pipe command */
+	int32	retval;			/* Return value from a function */
 
 	/* Print shell banner and startup message */
 
@@ -103,6 +111,8 @@ process	shell (
 	/* Continually prompt the user, read input, and execute command	*/
 
 	while (TRUE) {
+
+		npip = 0;
 
 		/* Display prompt */
 
@@ -197,125 +207,325 @@ process	shell (
 			tlen = tok[ntok];
 		}
 
+		/* Branch into a normal command and a pipe command */
 
-		/* Verify remaining tokens are type "other" */
+		if (commtype == SH_COMMNORM) {
+			
+			/* Verify remaining tokens are type "other" */
 
-		for (i=0; i<ntok; i++) {
-			if (toktyp[i] != SH_TOK_OTHER) {
-				break;
-			}
-		}
-		if ((ntok == 0) || (i < ntok)) {
-			fprintf(dev, SHELL_SYNERRMSG);
-			continue;
-		}
-
-		stdinput = stdoutput = dev;
-
-		/* Lookup first token in the command table */
-
-		for (j = 0; j < ncmd; j++) {
-			src = cmdtab[j].cname;
-			cmp = tokbuf;
-			diff = FALSE;
-			while (*src != NULLCH) {
-				if (*cmp != *src) {
-					diff = TRUE;
-					break;
-				}
-				src++;
-				cmp++;
-			}
-			if (diff || (*cmp != NULLCH)) {
-				continue;
-			} else {
-				break;
-			}
-		}
-
-		/* Handle command not found */
-
-		if (j >= ncmd) {
-			fprintf(dev, "command %s not found\n", tokbuf);
-			continue;
-		}
-
-		/* Handle built-in command */
-
-		if (cmdtab[j].cbuiltin) { /* No background or redirect. */
-			if (inname != NULL || outname != NULL || backgnd){
-				fprintf(dev, SHELL_BGERRMSG);
-				continue;
-			} else {
-				/* Set up arg vector for call */
-
-				for (i=0; i<ntok; i++) {
-					args[i] = &tokbuf[tok[i]];
-				}
-
-				/* Call builtin shell function */
-
-				if ((*cmdtab[j].cfunc)(ntok, args)
-							== SHELL_EXIT) {
+			for (i=0; i<ntok; i++) {
+				if (toktyp[i] != SH_TOK_OTHER) {
 					break;
 				}
 			}
-			continue;
-		}
+			if ((ntok == 0) || (i < ntok)) {
+				fprintf(dev, SHELL_SYNERRMSG);
+				continue;
+			}
 
-		/* Open files and redirect I/O if specified */
+			stdinput = stdoutput = dev;
 
-		if (inname != NULL) {
-			fprintf(dev, SHELL_INERRMSG, inname);
-			continue;
-		}
-		if (outname != NULL) {
-			if ((stdoutput = open(FSYSTEM, outname, "w")) == NOTFOUND) { /* File not found */
-				control(FSYSTEM, FCREATE, (int32)outname, 0);
-				stdoutput = open(FSYSTEM, outname, "w");
-				if (stdoutput == SYSERR) {
+			/* Lookup first token in the command table */
+
+			for (j = 0; j < ncmd; j++) {
+				src = cmdtab[j].cname;
+				cmp = tokbuf;
+				diff = FALSE;
+				while (*src != NULLCH) {
+					if (*cmp != *src) {
+						diff = TRUE;
+						break;
+					}
+					src++;
+					cmp++;
+				}
+				if (diff || (*cmp != NULLCH)) {
+					continue;
+				} else {
+					break;
+				}
+			}
+
+			/* Handle command not found */
+
+			if (j >= ncmd) {
+				fprintf(dev, "command %s not found\n", tokbuf);
+				continue;
+			}
+
+			/* Handle built-in command */
+
+			if (cmdtab[j].cbuiltin) { /* No background or redirect. */
+				if (inname != NULL || outname != NULL || backgnd){
+					fprintf(dev, SHELL_BGERRMSG);
+					continue;
+				} else {
+					/* Set up arg vector for call */
+
+					for (i=0; i<ntok; i++) {
+						args[i] = &tokbuf[tok[i]];
+					}
+
+					/* Call builtin shell function */
+
+					if ((*cmdtab[j].cfunc)(ntok, args)
+								== SHELL_EXIT) {
+						break;
+					}
+				}
+				continue;
+			}
+
+			/* Open files and redirect I/O if specified */
+
+			if (inname != NULL) {
+				if (((stdinput = open(FSYSTEM, inname, "r")) == NOTFOUND) || (stdinput == SYSERR)) {
+					fprintf(dev, SHELL_INERRMSG, inname);
+					continue;
+				}
+				else {
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
+			}
+			if (outname != NULL) {
+				if ((stdoutput = open(FSYSTEM, outname, "w")) == NOTFOUND) { /* File not found */
+					control(FSYSTEM, FCREATE, (int32)outname, 0);
+					stdoutput = open(FSYSTEM, outname, "w");
+					if (stdoutput == SYSERR) {
+						fprintf(dev, SHELL_OUTERRMSG, outname);
+						continue;
+					}
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
+				else if (stdoutput == SYSERR) {
 					fprintf(dev, SHELL_OUTERRMSG, outname);
 					continue;
 				}
-				proctab[currpid].nfprdesc--;
-				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				else { /* Mark the file as closed because the child will close it as its stdoutput */
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
 			}
-			else if (stdoutput == SYSERR) {
-				fprintf(dev, SHELL_OUTERRMSG, outname);
+
+			/* Spawn child thread for non-built-in commands */
+
+			child = create(cmdtab[j].cfunc,
+				SHELL_CMDSTK, SHELL_CMDPRIO,
+				cmdtab[j].cname, 2, ntok, &tmparg);
+
+			/* If creation or argument copy fails, report error */
+
+			if ((child == SYSERR) ||
+		    	(addargs(child, ntok, tok, tlen, tokbuf, &tmparg)
+								== SYSERR) ) {
+				fprintf(dev, SHELL_CREATMSG);
 				continue;
 			}
-			else { /* Mark the file as closed because the child will close it as its stdoutput */
-				proctab[currpid].nfprdesc--;
-				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+
+			/* Set stdinput and stdoutput in child to redirect I/O */
+
+			proctab[child].prdesc[0] = stdinput;
+			proctab[child].prdesc[1] = stdoutput;
+
+			msg = recvclr();
+			resume(child);
+			if (! backgnd) {
+				msg = receive();
+				while (msg != child) {
+					msg = receive();
+				}
 			}
 		}
+		else {
 
-		/* Spawn child thread for non-built-in commands */
+			/* Verify remaining tokens are type "other" or "pipe" */
+			i = 0;
 
-		child = create(cmdtab[j].cfunc,
-			SHELL_CMDSTK, SHELL_CMDPRIO,
-			cmdtab[j].cname, 2, ntok, &tmparg);
+			while (i < ntok) {
+				if ((toktyp[i] != SH_TOK_OTHER) && (toktyp[i] != SH_TOK_PIPE)) {
+					break;
+				}
+				if ((toktyp[i] == SH_TOK_PIPE) || (i == 0)) {
+					if (toktyp[i - 1] == SH_TOK_PIPE) {
+						break;
+					}
+					if (toktyp[i] == SH_TOK_PIPE) {
+						i++;
+						npip++;
+					}
+					/* Lookup Command token in the command table */
 
-		/* If creation or argument copy fails, report error */
+					for (j = 0; j < ncmd; j++) {
+						src = cmdtab[j].cname;
+						cmp = &tokbuf[tok[i]];
+						diff = FALSE;
+						while (*src != NULLCH) {
+							if (*cmp != *src) {
+								diff = TRUE;
+								break;
+							}
+							src++;
+							cmp++;
+						}
+						if (diff || (*cmp != NULLCH)) {
+							continue;
+						} else {
+							break;
+						}
+					}
 
-		if ((child == SYSERR) ||
-		    (addargs(child, ntok, tok, tlen, tokbuf, &tmparg)
-							== SYSERR) ) {
-			fprintf(dev, SHELL_CREATMSG);
-			continue;
-		}
+					/* Handle command not found */
 
-		/* Set stdinput and stdoutput in child to redirect I/O */
+					if (j >= ncmd) {
+						fprintf(dev, "command %s not found\n", tokbuf);
+						break;
+					}
 
-		proctab[child].prdesc[0] = stdinput;
-		proctab[child].prdesc[1] = stdoutput;
+					/* Check for a built-in command */
 
-		msg = recvclr();
-		resume(child);
-		if (! backgnd) {
-			msg = receive();
-			while (msg != child) {
+					if (cmdtab[j].cbuiltin) {
+						fprintf(dev, SHELL_BPERRMSG);
+						break;
+					}
+				}
+				i++;
+			}
+			if ((ntok == 0) || (i < ntok) || (npip > NPIPE) || (toktyp[i - 1] == SH_TOK_PIPE)) {
+				fprintf(dev, SHELL_SYNERRMSG);
+				continue;
+			}
+
+			stdinput = stdoutput = dev;
+
+			/* Open files and redirect I/O if specified */
+
+			if (inname != NULL) {
+				if (((stdinput = open(FSYSTEM, inname, "r")) == NOTFOUND) || (stdinput == SYSERR)) {
+					fprintf(dev, SHELL_INERRMSG, inname);
+					continue;
+				}
+				else {
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
+			}
+			if (outname != NULL) {
+				if ((stdoutput = open(FSYSTEM, outname, "w")) == NOTFOUND) { /* File not found */
+					control(FSYSTEM, FCREATE, (int32)outname, 0);
+					stdoutput = open(FSYSTEM, outname, "w");
+					if (stdoutput == SYSERR) {
+						fprintf(dev, SHELL_OUTERRMSG, outname);
+						continue;
+					}
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
+				else if (stdoutput == SYSERR) {
+					fprintf(dev, SHELL_OUTERRMSG, outname);
+					continue;
+				}
+				else { /* Mark the file as closed because the child will close it as its stdoutput */
+					proctab[currpid].nfprdesc--;
+					proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+				}
+			}
+
+			/* Open pipe devices */
+
+			for (i = 0; i < npip; i++) {
+				pipIDs[i] = open(pipe0, "\n", "\n");
+				proctab[currpid].prdesc[proctab[currpid].pprdesc] = -1;
+			}
+
+			/* Create child processes to execute the commands */
+
+			i = 0;
+			p = 0;
+
+			while (i < ntok) {
+
+				if (toktyp[i] == SH_TOK_PIPE) {
+					i++;
+				}
+
+				/* Lookup Command token in the command table */
+
+				for (j = 0; j < ncmd; j++) {
+					src = cmdtab[j].cname;
+					cmp = &tokbuf[tok[i]];
+					diff = FALSE;
+					while (*src != NULLCH) {
+						if (*cmp != *src) {
+							diff = TRUE;
+							break;
+						}
+						src++;
+						cmp++;
+					}
+					if (diff || (*cmp != NULLCH)) {
+						continue;
+					} else {
+						break;
+					}
+				}
+
+				z = i;
+
+				while ((i < ntok) && (toktyp[i] != SH_TOK_PIPE)){
+					i++;
+				}
+				i--;
+
+				/* Spawn child thread for non-built-in commands */
+
+				child = create(cmdtab[j].cfunc,
+					SHELL_CMDSTK, SHELL_CMDPRIO,
+					cmdtab[j].cname, 2, (i - z + 1), &tmparg);
+
+				/* If creation or argument copy fails, report error */
+				
+				if (i == (ntok - 1)) {
+					retval = addargs(child, (i - z + 1), tok + z, tlen - tok[z], tokbuf + tok[z], &tmparg);
+				}
+				else {
+					retval = addargs(child, (i - z + 1), tok + z, tok[i + 1] - tok[z], tokbuf + tok[z], &tmparg);
+				}
+
+				if ((child == SYSERR) ||
+		    		(retval == SYSERR)) {
+					fprintf(dev, SHELL_CREATMSG);
+					break;
+				}
+
+				/* Set stdinput and stdoutput in child to redirect I/O */
+
+				if (z == 0) {
+					proctab[child].prdesc[0] = stdinput;
+				}
+				else {
+					proctab[child].prdesc[0] = pipIDs[p - 1];
+				}
+
+				if (i == (ntok - 1)) {
+					proctab[child].prdesc[1] = stdoutput;
+				}
+				else {
+					proctab[child].prdesc[1] = pipIDs[p];
+				}
+
+				resume(child);
+
+				i++;
+				p++;
+			}
+			msg = recvclr();
+			if (! backgnd) {
 				msg = receive();
+				while (msg != child) {
+					msg = receive();
+				}
 			}
 		}
     }

@@ -406,7 +406,7 @@ extern	devcall	lfwrite(struct dentry *, char *, int32);
 extern	devcall	pipinit(struct dentry *);
 
 /* in file pipopen.c */
-extern	devcall	pipopen(void);
+extern	devcall	pipopen(did32, char *, char *);
 
 /* in file pipclose.c */
 extern	devcall	pipclose(struct dentry *);

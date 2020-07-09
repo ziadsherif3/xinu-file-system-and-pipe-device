@@ -6,7 +6,11 @@
  *  pipopen  -  Open a free pipe pseudo-device
  *---------------------------------------------------------------
  */
-devcall	pipopen (void)
+devcall	pipopen (
+	  did32		descrp,		/* Descriptor for device	*/
+	  char		*name,		/* Name to use, if any		*/
+	  char		*mode		/* Mode for device, if any	*/
+	)
 {
     struct pipeblk *pipeptr;    /* Pointer to a pipe control block */
     intmask mask;			    /* Saved interrupt mask		*/
@@ -27,8 +31,8 @@ devcall	pipopen (void)
 
     pipeptr->pstate = USED;
     pipeptr->pmode = wmode;
-    pipeptr->wblocked = FALSE;
-    pipeptr->rdone = FALSE;
+    pipeptr->wpointer = 0;
+    pipeptr->rpointer = 0;
 
     for (i = 5; i < NDESC; i++) { /* Find first free location for files in prdesc */
         if (proctab[currpid].prdesc[i] == -1) {
