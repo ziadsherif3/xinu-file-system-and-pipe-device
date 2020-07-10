@@ -220,12 +220,18 @@ devcall	lmfopen (
         return SYSERR;
     }
 
+    /* Update the i-node on disk */
+
+    pnode2->sdev = lfptr->lfdev;
+    pnode2->filestat.acctime = pnode2->filestat.mtime = clktime;
+    retval = write(disk, (char *)pnode2, pnode2->filestat.ino);
+
     /* Initialize the local file pseudo-device */
 
     lfptr = &lftab[lfnext];
     lfptr->lfstate = USED;
     lfptr->lfram = disk;
-    lfptr->lfinode = pnode2;
+    memcpy((char *)&lfptr->lfinode, (char *)pnode2, sizeof(struct inode));
     lfptr->lfmode = mod;
     lfptr->lfoffset = 0;
     to = lfptr->lfname;

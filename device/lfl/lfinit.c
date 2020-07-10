@@ -20,7 +20,6 @@ devcall	lfinit (
 	
 	lfptr->lfstate = FREE; /* Device is currently unused */ 
 	lfptr->lfdev = devptr->dvnum; /* Set device ID */
-	lfptr->lfinode = (struct inode *) NULL;
 	lfptr->lfdbdirty = FALSE;
 	lfptr->lfoffset = 0;
 	lfptr->lfdnum = LF_DNULL;
@@ -30,7 +29,8 @@ devcall	lfinit (
 		lfptr->lfname[i] = NULLCH;
 	}
 
-	memset((char *)&lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+	memset(lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+	memset((char *)&lfptr->lfinode, NULLCH, sizeof(struct inode));
     
 	return OK;
 }

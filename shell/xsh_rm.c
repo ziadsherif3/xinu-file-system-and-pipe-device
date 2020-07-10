@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- * xhs_rm - Delete an existing file
+ * xsh_rm - Delete an existing file
  *------------------------------------------------------------------------
  */
 shellcmd xsh_rm(int nargs, char *args[]) {

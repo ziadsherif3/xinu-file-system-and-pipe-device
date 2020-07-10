@@ -36,11 +36,10 @@ devcall	lfputc (
         }
     }
 
-    /* if apppending a byte to the file, increment file size */
+    /* Increase the file size if necessary */
 
-    if (lfptr->lfoffset >= lfptr->lfinode->filestat.size) { /* re-check the comparison */
-        lfptr->lfinode->filestat.size ++;
-        /* dirty inode*/
+    if (lfptr->lfoffset >= lfptr->lfinode.filestat.size) {
+        lfptr->lfinode.filestat.size ++;
     }
     *lfptr->lfbyte++ = ch;
     lfptr->lfoffset++;

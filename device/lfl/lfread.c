@@ -33,7 +33,7 @@ devcall	lfread (
         return SYSERR;
     }
 
-    if ((count <= 0) || (lfptr->lfoffset >= lfptr->lfinode->filestat.size)) {
+    if ((count <= 0) || (lfptr->lfoffset >= lfptr->lfinode.filestat.size)) {
         return SYSERR;
     }
 

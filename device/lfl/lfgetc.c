@@ -28,7 +28,7 @@ devcall	lfgetc (
 	
 	/* Return EOF for any attempt to read beyond the EOF */
 	
-	if (lfptr->lfoffset >= lfptr->lfinode->filestat.size) {
+	if (lfptr->lfoffset >= lfptr->lfinode.filestat.size) {
 		return EOF;
 	}
 

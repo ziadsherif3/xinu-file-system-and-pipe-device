@@ -4,7 +4,7 @@
 
 
 /*------------------------------------------------------------------------
- * xhs_cp - Copies source file into destination
+ * xsh_cp - Copies source file into destination
  *------------------------------------------------------------------------
  */
 shellcmd xsh_cp(int nargs, char *args[]) {

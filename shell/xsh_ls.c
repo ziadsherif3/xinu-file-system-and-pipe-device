@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 /*-----------------------------------------------------------------------------
- * xhs_ls - Displays information about files in the current working directory
+ * xsh_ls - Displays information about files in the current working directory
  *-----------------------------------------------------------------------------
  */
 shellcmd xsh_ls(int nargs, char *args[]) {

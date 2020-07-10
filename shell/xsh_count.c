@@ -27,7 +27,9 @@ shellcmd xsh_count(int nargs, char *args[]) {
         rdcount += retval;
         retval = read(proctab[currpid].prdesc[0], buff, BUFF_SIZE);
     }
-    rdcount += retval;
+    if (retval != EOF) {
+        rdcount += retval;
+    }
     sprintf(outbuff, "%d total bytes received\n\0", rdcount);
     write(proctab[currpid].prdesc[1], outbuff, strlen(outbuff));
 

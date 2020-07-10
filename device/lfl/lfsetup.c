@@ -74,21 +74,20 @@ local	status	getcputcsetup(struct lfcblk *lfptr)
     i = offset / RM_BLKSIZ;
 
     if (i < 10) { /* A direct Block Found */
-        lfptr->lfdnum = lfptr->lfinode->datablcks[i];
-        //kprintf("lfsetup: dnum = %d",lfptr->lfdnum);
+        lfptr->lfdnum = lfptr->lfinode.datablcks[i];
         read(ramNo, lfptr->lfdblock, lfptr->lfdnum);
         lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
     }
     else { /* Retrieve the correct indirect block */
         if (offset < singleBlockRange) { /* within the single indirect block range */
-            read(ramNo, (char*)singleIndex, lfptr->lfinode->datablcks[10]);
+            read(ramNo, (char*)singleIndex, lfptr->lfinode.datablcks[10]);
             i = (offset / RM_BLKSIZ) - 10; // Holds the index in the single indirect block
             lfptr->lfdnum = singleIndex[i];
             read(ramNo, lfptr->lfdblock, lfptr->lfdnum);
             lfptr->lfbyte = &lfptr->lfdblock[offset % RM_BLKSIZ];
         }
         else { /* within the double indirect block range */
-            read(ramNo, (char*)masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+            read(ramNo, (char*)masterDoubleIndex, lfptr->lfinode.datablcks[11]);
             i = (offset / RM_BLKSIZ) - 138; // Bypass direct and single indirect indeces */
             i /= 128; // Holds the index of the master double indirect block
             read(ramNo, (char *)secondaryDoubleIndex, masterDoubleIndex[i]);
@@ -128,7 +127,7 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
     struct lfdbfree freetemp;                   /* Free block to allocate in */
 
 
-    if (lfptr->lfinode->filestat.size >= MAXFILESIZE) {
+    if (lfptr->lfinode.filestat.size >= MAXFILESIZE) {
         return SYSERR;
     }
 
@@ -144,22 +143,22 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
 
     i = offset / RM_BLKSIZ;
 
-    if (offset >= lfptr->lfinode->filestat.size) {
+    if (offset >= lfptr->lfinode.filestat.size) {
         dnum = LF_DNULL;
         if (i < 10) { /* Direct block */
-            dnum = lfptr->lfinode->datablcks[i];
+            dnum = lfptr->lfinode.datablcks[i];
         }
         else {
             if (offset < singleBlockRange) { /* within the single indirect block range */
-                if (lfptr->lfinode->datablcks[10] != LF_DNULL) {
-                    read(ramNo, (char*)singleIndex, lfptr->lfinode->datablcks[10]);
+                if (lfptr->lfinode.datablcks[10] != LF_DNULL) {
+                    read(ramNo, (char*)singleIndex, lfptr->lfinode.datablcks[10]);
                     j = (offset / RM_BLKSIZ) - 10; // Holds the index in the single indirect block
                     dnum = singleIndex[j];
                 }
             }
             else { /* within the double indirect block range */
-                if (lfptr->lfinode->datablcks[11] != LF_DNULL) {
-                    read(ramNo, (char*)masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+                if (lfptr->lfinode.datablcks[11] != LF_DNULL) {
+                    read(ramNo, (char*)masterDoubleIndex, lfptr->lfinode.datablcks[11]);
                     j = (offset / RM_BLKSIZ) - 138; // Bypass direct and single indirect indeces */
                     j /= 128; // Holds the index of the master double indirect block
                     if (masterDoubleIndex[j] != LF_DNULL) {
@@ -184,8 +183,8 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
                 return OK;
             }
         }
-        else if (offset > lfptr->lfinode->filestat.size) {
-            if (lfptr->lfinode->filestat.size == 0) {
+        else if (offset > lfptr->lfinode.filestat.size) {
+            if (lfptr->lfinode.filestat.size == 0) {
                 count += RM_BLKSIZ;
                 if (offset < RM_BLKSIZ) {
                     count -= (RM_BLKSIZ - offset);
@@ -195,11 +194,11 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
                 }
             }
             else {
-                if (((lfptr->lfinode->filestat.size) % RM_BLKSIZ) == 0) {
-                    j = lfptr->lfinode->filestat.size - 1; // Get last allocated byte in file
+                if (((lfptr->lfinode.filestat.size) % RM_BLKSIZ) == 0) {
+                    j = lfptr->lfinode.filestat.size - 1; // Get last allocated byte in file
                 }
                 else {
-                    j = (((lfptr->lfinode->filestat.size / RM_BLKSIZ) + 1) * RM_BLKSIZ) - 1; // Get last allocated byte in file
+                    j = (((lfptr->lfinode.filestat.size / RM_BLKSIZ) + 1) * RM_BLKSIZ) - 1; // Get last allocated byte in file
                 }
                 
                 count += (offset - j - 1);
@@ -207,11 +206,11 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
         }
     }
     else {
-        if (((lfptr->lfinode->filestat.size) % RM_BLKSIZ) == 0) {
-            j = lfptr->lfinode->filestat.size - 1; // Get last allocated byte in file
+        if (((lfptr->lfinode.filestat.size) % RM_BLKSIZ) == 0) {
+            j = lfptr->lfinode.filestat.size - 1; // Get last allocated byte in file
         }
         else {
-            j = (((lfptr->lfinode->filestat.size / RM_BLKSIZ) + 1) * RM_BLKSIZ) - 1; // Get last allocated byte in file
+            j = (((lfptr->lfinode.filestat.size / RM_BLKSIZ) + 1) * RM_BLKSIZ) - 1; // Get last allocated byte in file
         }
 
         count -= (j - offset + 1); // A few bytes don't need to be allocated
@@ -227,7 +226,7 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
         }
     }
 
-    if ((lfptr->lfinode->filestat.size + count) >= MAXFILESIZE) {
+    if ((lfptr->lfinode.filestat.size + count) >= MAXFILESIZE) {
         if (ramNo == RAMDISK0) {
             signal(fsystem.lmf_mutex0);
         }
@@ -259,20 +258,20 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
 
     /* Get the first place to start allocation */
 
-    if (((lfptr->lfinode->filestat.size) % RM_BLKSIZ) == 0) {
-        dnum = (lfptr->lfinode->filestat.size) / RM_BLKSIZ;
+    if (((lfptr->lfinode.filestat.size) % RM_BLKSIZ) == 0) {
+        dnum = (lfptr->lfinode.filestat.size) / RM_BLKSIZ;
     }
     else {
-        dnum = ((lfptr->lfinode->filestat.size) / RM_BLKSIZ) + 1;
+        dnum = ((lfptr->lfinode.filestat.size) / RM_BLKSIZ) + 1;
     }
 
     while ((nblocks--) > 0) {
         if (dnum < 10) {
-            lfptr->lfinode->datablcks[dnum] = dballoc(&freetemp, ramNo);
+            lfptr->lfinode.datablcks[dnum] = dballoc(&freetemp, ramNo);
         }
         else {
             if (dnum == 10) {
-                lfptr->lfinode->datablcks[10] = dballoc((struct lfdbfree *)singleIndex, ramNo);
+                lfptr->lfinode.datablcks[10] = dballoc((struct lfdbfree *)singleIndex, ramNo);
                 for (i = 0; i < (sizeof(singleIndex) / sizeof(int32)); i++) {
                     singleIndex[i] = LF_DNULL;
                 }
@@ -283,8 +282,8 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
             }
             else {
                 if (dnum == 138) {
-                    write(ramNo, (char *)singleIndex, lfptr->lfinode->datablcks[10]);
-                    lfptr->lfinode->datablcks[11] = dballoc((struct lfdbfree *)masterDoubleIndex, ramNo);
+                    write(ramNo, (char *)singleIndex, lfptr->lfinode.datablcks[10]);
+                    lfptr->lfinode.datablcks[11] = dballoc((struct lfdbfree *)masterDoubleIndex, ramNo);
                     for (i = 0; i < (sizeof(masterDoubleIndex) / sizeof(int32)); i++) {
                         masterDoubleIndex[i] = LF_DNULL;
                     }
@@ -314,12 +313,17 @@ local	status	wsetup(struct lfcblk *lfptr, int32 count)
         dnum++;
     }
 
-    if (lfptr->lfinode->datablcks[11] != LF_DNULL) {
-        write(ramNo, (char *)masterDoubleIndex, lfptr->lfinode->datablcks[11]);
+    if (lfptr->lfinode.datablcks[11] != LF_DNULL) {
+        i = j / 128;
+        write(ramNo, (char *)secondaryDoubleIndex, masterDoubleIndex[i]);
+        write(ramNo, (char *)masterDoubleIndex, lfptr->lfinode.datablcks[11]);
+    }
+    else if (lfptr->lfinode.datablcks[10] != LF_DNULL){
+        write(ramNo, (char *)singleIndex, lfptr->lfinode.datablcks[10]);
     }
 
-    if (offset > lfptr->lfinode->filestat.size) { /* Update the file size if the offset is greater than the file size */
-        lfptr->lfinode->filestat.size = offset;
+    if (offset > lfptr->lfinode.filestat.size) { /* Update the file size if the offset is greater than the file size */
+        lfptr->lfinode.filestat.size = offset;
     }
 
     if (ramNo == RAMDISK0) {

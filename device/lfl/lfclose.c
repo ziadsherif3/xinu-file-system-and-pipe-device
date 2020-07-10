@@ -45,13 +45,12 @@ devcall	lfclose (
 
 	/* Write i-node of file to disk */
 
-	lfptr->lfinode->sdev = -1;
-    write(lfptr->lfram, (char*)lfptr->lfinode, lfptr->lfinode->filestat.ino);
+	lfptr->lfinode.sdev = -1;
+    write(lfptr->lfram, (char *)&lfptr->lfinode, lfptr->lfinode.filestat.ino);
 
 	/* free up the device and return */
 
 	lfptr->lfstate = FREE;
-	lfptr->lfinode = (struct inode *) NULL;
 	lfptr->lfdbdirty = FALSE;
 	lfptr->lfoffset = 0;
 	lfptr->lfdnum = LF_DNULL;
@@ -61,7 +60,8 @@ devcall	lfclose (
 		lfptr->lfname[i] = NULLCH;
 	}
 
-	memset((char *)&lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+	memset(lfptr->lfdblock, NULLCH, RM_BLKSIZ);
+	memset((char *)&lfptr->lfinode, NULLCH, sizeof(struct inode));
 
 	proctab[currpid].prdesc[j] = -1;
 	proctab[currpid].nfprdesc--;

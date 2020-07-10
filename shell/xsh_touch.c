@@ -4,7 +4,7 @@
 
 
 /*------------------------------------------------------------------------
- * xhs_touch - Updates access and modification time of a file
+ * xsh_touch - Updates access and modification time of a file
  *------------------------------------------------------------------------
  */
 shellcmd xsh_touch(int nargs, char *args[]) {

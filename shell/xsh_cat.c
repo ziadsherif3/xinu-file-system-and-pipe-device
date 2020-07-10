@@ -1,10 +1,10 @@
 /* xsh_cat.c - xsh_cat */
 
 #include <xinu.h>
-
+#define	BUFF_SIZE	512
 
 /*------------------------------------------------------------------------
- * xhs_cat - Display File Contents
+ * xsh_cat - Display File Contents
  *------------------------------------------------------------------------
  */
 shellcmd xsh_cat(int nargs, char *args[]) {
@@ -16,7 +16,7 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 	}
 	
 	did32 fileDev;	/* File device descriptor */
-	char  readBuff[MAXFILESIZE];	/* buffer to hold read characters */
+	char  readBuff[BUFF_SIZE];	/* buffer to hold read characters */
 	uint64 numRead;	/* Number of Bytes read */
 	char *srcname = getmem(strlen(args[1]) + 1);
 	strncpy(srcname, args[1], strlen(args[1]) + 1);
@@ -32,16 +32,25 @@ shellcmd xsh_cat(int nargs, char *args[]) {
 	struct dentry *devptr = (struct dentry *) &devtab[fileDev];
 	struct lfcblk *lfptr = &lftab[devptr->dvminor];
 
-	if (lfptr->lfinode->filestat.size == 0) {
+	if (lfptr->lfinode.filestat.size == 0) {
 		close(fileDev);
 		return 0;
 	}
 
-	/* Read the file */
-	numRead = read(fileDev, readBuff, MAXFILESIZE);
+	/* Read the file and write in stdoutput */
+
+
+	numRead = read(fileDev, readBuff, BUFF_SIZE);
+	while (numRead == BUFF_SIZE) {
+		write(proctab[currpid].prdesc[1], readBuff, numRead);
+		numRead = read(fileDev, readBuff, BUFF_SIZE);
+	}
+
+	if (numRead != SYSERR) {
+		write(proctab[currpid].prdesc[1], readBuff, numRead);
+	}
+
 	close(fileDev);
-	
-	write(proctab[currpid].prdesc[1], readBuff, numRead);
 	
 	return 0;
 }
