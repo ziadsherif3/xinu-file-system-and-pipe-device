@@ -34,11 +34,11 @@ devcall	opendir (
     }
 
     if ((retval1 == 0) && (strlen(name) == 5)) {
-        cwd = &fsystem.rt0;
+        memcpy((char *)&cwd, (char *)&fsystem.rt0, sizeof(struct inode));
         return OK;
     }
     else if ((retval2 == 0) && (strlen(name) == 5)) {
-        cwd = &fsystem.rt1;
+        memcpy((char *)&cwd, (char *)&fsystem.rt1, sizeof(struct inode));
         return OK;
     }
 
@@ -179,6 +179,6 @@ devcall	opendir (
         signal(fsystem.lmf_mutex1);
     }
 
-    cwd = pnode2;
+    memcpy((char *)&cwd, (char *)pnode2, sizeof(struct inode));
     return OK;
 }

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "shprototypes.h"
 
-struct inode *cwd = &fsystem.rt0;
+struct inode cwd;
 
 /************************************************************************/
 /* Table of Xinu shell commands and the function associated with each	*/
@@ -107,6 +107,10 @@ process	shell (
 		SHELL_BAN5,SHELL_BAN6,SHELL_BAN7,SHELL_BAN8,SHELL_BAN9);
 
 	fprintf(dev, "%s\n\n", SHELL_STRTMSG);
+
+	/* Set the cwd as the root of RAMDISK0 */
+	
+	memcpy((char *)&cwd, (char *)&fsystem.rt0, sizeof(struct inode));
 
 	/* Continually prompt the user, read input, and execute command	*/
 

@@ -14,14 +14,14 @@ shellcmd xsh_ls(int nargs, char *args[]) {
 		return SYSERR;
 	}
 
-	if (cwd->filestat.size == 0) {
+	if (cwd.filestat.size == 0) {
 		return 0;
 	}
 
 	int32 i;
 
-	for (i = 0; i < (cwd->filestat.size); i++) {
-		write(proctab[currpid].prdesc[1], cwd->contents[i].name, strlen(cwd->contents[i].name));
+	for (i = 0; i < (cwd.filestat.size); i++) {
+		write(proctab[currpid].prdesc[1], cwd.contents[i].name, strlen(cwd.contents[i].name));
 		write(proctab[currpid].prdesc[1], "\n", 1);
 	}
 

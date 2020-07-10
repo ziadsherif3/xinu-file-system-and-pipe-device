@@ -104,7 +104,7 @@ struct lfdbfree {
 
 extern struct lfcblk lftab[];
 extern struct lmf fsystem;
-extern struct inode *cwd;
+extern struct inode cwd;
 
 /* Helper functions declerations */
 
