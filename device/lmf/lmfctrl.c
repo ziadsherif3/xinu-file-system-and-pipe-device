@@ -275,6 +275,10 @@ local	status	fcreate(char *name)
         }
         return SYSERR;
 	}
+    
+    if (cwd.filestat.ino == pnode1->filestat.ino) {
+        memcpy((char *)&cwd, (char *)pnode1, sizeof(struct inode));
+    }
 
 	if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);
@@ -502,6 +506,10 @@ local	status	dircreate(char *name)
         return SYSERR;
 	}
 
+    if (cwd.filestat.ino == pnode1->filestat.ino) {
+        memcpy((char *)&cwd, (char *)pnode1, sizeof(struct inode));
+    }
+
 	if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);
     }
@@ -697,6 +705,10 @@ local	status	fdelete(char *name)
         return SYSERR;
 	}
 
+    if (cwd.filestat.ino == pnode1->filestat.ino) {
+        memcpy((char *)&cwd, (char *)pnode1, sizeof(struct inode));
+    }
+
     if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);
     }
@@ -891,6 +903,8 @@ local	status	dirdelete(char *name)
         }
         return SYSERR;
 	}
+
+    memcpy((char *)&cwd, (char *)root, sizeof(struct inode));
 
     if (retval1 == 0) {
         signal(fsystem.lmf_mutex0);
